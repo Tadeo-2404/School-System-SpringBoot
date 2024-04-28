@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "student_id", nullable = false, unique = true)
-    private int student_id;
-    @Column(name = "student_name", nullable = false)
-    private String student_name;
-    @Column(name = "student_email", nullable = false, unique = true)
-    private String student_email;
+    @Column(name = "id", nullable = false, unique = true)
+    private int id;
+    @Column(name = "name", nullable = false)
+    private String name;
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 }
