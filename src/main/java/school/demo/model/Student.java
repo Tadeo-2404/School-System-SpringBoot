@@ -19,4 +19,9 @@ public class Student {
     private String name;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    public Student(String studentEmail, String studentName) {
+        this.email = studentEmail;
+        this.name = studentName;
+    }
 }
