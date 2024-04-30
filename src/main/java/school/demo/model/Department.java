@@ -13,8 +13,16 @@ import lombok.NoArgsConstructor;
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "department_id", nullable = false, unique = true)
-    private int department_id;
-    @Column(name = "department_name", nullable = false, unique = true)
-    private String department_name;
+    @Column(name = "id", nullable = false, unique = true)
+    private int id;
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
+
+    public Department(String name) {
+        this.name = name;
+    }
+
+    public Department(int departmentId) {
+        this.id = departmentId;
+    }
 }
