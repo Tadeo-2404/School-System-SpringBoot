@@ -13,14 +13,23 @@ import lombok.NoArgsConstructor;
 public class Section {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "section_id", nullable = false, unique = true)
-    private int section_id;
+    @Column(name = "id", nullable = false, unique = true)
+    private int id;
+
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+    @JoinColumn(name = "departmentId", nullable = false)
+    private Department departmentId;
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id", nullable = false)
-    private Teacher teacher;
+    @JoinColumn(name = "teacherId", nullable = false)
+    private Teacher teacherId;
+
+    public Section(String name, Department department, Teacher teacher) {
+        this.name = name;
+        this.departmentId = department;
+        this.teacherId = teacher;
+    }
 }
