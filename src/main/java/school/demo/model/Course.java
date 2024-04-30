@@ -13,10 +13,18 @@ import lombok.NoArgsConstructor;
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "course_id", nullable = false, unique = true)
-    private int course_id;
+    @Column(name = "id", nullable = false, unique = true)
+    private int id;
+
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+    @JoinColumn(name = "departmentId", nullable = false)
+    private Department departmentId;
+
+    public Course(String name, Department department) {
+        this.name = name;
+        this.departmentId = department;
+    }
 }
