@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Course Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div>
+    <div class="bg-primary">
+        <h1 class="text-white p-3">Course List</h1>
+        <nav class="navbar navbar-expand-lg bg-primary">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-white" th:href="@{/departments/page}">Departments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" th:href="@{/teachers/page}">Teachers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" th:href="@{/students/page}">Students</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div th:if="${!coursesFound}" class="p-3">
+        <p>No courses found, try creating one</p>
+    </div>
+    <div th:unless="${!coursesFound}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th cope="col">ID</th>
+                <th cope="col">Name</th>
+                <th cope="col">Department</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course : ${list}">
+                <td th:text="${course.id}"></td>
+                <td th:text="${course.name}"></td>
+                <td th:text="${course.department.name}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <form action="#" th:action="@{/courses/save}" method="post" th:object="${course}">
+        <fieldset>
+            <legend>Add Course</legend>
+            <div class="form-group">
+                <label for="name">Course Name</label>
+                <input th:field="*{name}" type="text" class="form-control" id="name" name="name" placeholder="Course name" required>
+            </div>
+            <div class="form-group">
+                <label for="department">Departments</label>
+                <div th:if="${departmentsFound}">
+                    <select th:field="*{department}" class="form-control" id="department" name="department" required>
+                        <option value="">Select Department</option>
+                        <option th:each="department : ${departmentList}" th:value="${department.id}" th:text="${department.name}"></option>
+                    </select>
+                </div>
+                <div th:unless="${departmentsFound}" class="p-2">
+                    <p>No departments available</p>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </fieldset>
+    </form>
+</div>
+
+<div th:if="${coursesFound}">
+    <div class="container mt-4">
+        <form action="#" th:action="@{/courses/edit}" method="post" th:object="${course}">
+            <fieldset>
+                <legend>Edit Course</legend>
+                <div class="form-group">
+                    <label for="courseEdit">Course</label>
+                    <select th:field="*{id}" class="form-control" id="courseEdit" name="courseEdit" required>
+                        <option value=0>Select Course</option>
+                        <option th:each="course : ${list}" th:value="${course.id}" th:text="${course.name}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nameEdit">Course Name</label>
+                    <input th:field="*{name}" type="text" class="form-control" id="nameEdit" name="name" placeholder="Course name">
+                </div>
+                <div class="form-group">
+                    <label for="departmentEdit">Departments</label>
+                    <div th:if="${departmentsFound}">
+                        <select th:field="*{department}" class="form-control" id="departmentEdit" name="department">
+                            <option value="">Select Department</option>
+                            <option th:each="department : ${departmentList}" th:value="${department.id}" th:text="${department.name}"></option>
+                        </select>
+                    </div>
+                    <div th:unless="${departmentsFound}" class="p-2">
+                        <p>No departments available</p>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </fieldset>
+        </form>
+    </div>
+
+    <div class="container mt-4">
+        <form action="#" th:action="@{/courses/delete}" method="post" th:object="${course}">
+            <fieldset>
+                <legend>Delete Course</legend>
+                <div class="form-group">
+                    <label for="courseDelete">Course</label>
+                    <select th:field="*{id}" class="form-control" id="courseDelete" name="courseDelete" required>
+                        <option value=0>Select Course</option>
+                        <option th:each="course : ${list}" th:value="${course.id}" th:text="${course.name}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

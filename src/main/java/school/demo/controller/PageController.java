@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import school.demo.model.Course;
 import school.demo.model.Department;
 import school.demo.model.Student;
 import school.demo.model.Teacher;
+import school.demo.service.CourseService;
 import school.demo.service.DepartmentService;
 import school.demo.service.StudentService;
 import school.demo.service.TeacherService;
@@ -24,11 +26,13 @@ public class PageController {
     private final DepartmentService departmentService;
     private final StudentService studentService;
     private final TeacherService teacherService;
+    private final CourseService courseService;
 
-    public PageController(DepartmentService departmentService, StudentService studentService, TeacherService teacherService) {
+    public PageController(DepartmentService departmentService, StudentService studentService, TeacherService teacherService, CourseService courseService) {
         this.departmentService = departmentService;
         this.studentService = studentService;
         this.teacherService = teacherService;
+        this.courseService = courseService;
     }
 
     @GetMapping("/departments/page")
@@ -170,5 +174,59 @@ public class PageController {
 
         // Redirect to the department page
         return "redirect:/teachers/page";
+    }
+
+    //COURSES
+    @GetMapping("/courses/page")
+    public String course(Model model) {
+        ResponseEntity<Object> responseEntityCourse = courseService.getCourses();
+        ResponseEntity<Object> responseEntityDepartment = departmentService.getDepartments();
+
+        if(responseEntityCourse.getStatusCode() == HttpStatus.NOT_FOUND) {
+            model.addAttribute("coursesFound", false);
+        } else {
+            model.addAttribute("coursesFound", true);
+            //teacher list
+            Map<String, Object> responseBodyCourse = (Map<String, Object>) responseEntityCourse.getBody();
+            List<Course> courseList = (List<Course>) responseBodyCourse.get("data");
+            model.addAttribute("list", courseList);
+        }
+
+        if(responseEntityDepartment.getStatusCode() == HttpStatus.NOT_FOUND) {
+            model.addAttribute("departmentsFound", false);
+        } else {
+            model.addAttribute("departmentsFound", true);
+            //department list
+            Map<String, Object> responseBodyDepartment = (Map<String, Object>) responseEntityDepartment.getBody();
+            List<Department> departmentList = (List<Department>) responseBodyDepartment.get("data");
+            model.addAttribute("departmentList", departmentList);
+        }
+
+        model.addAttribute("course", new Course());
+        return "course";
+    }
+
+    @PostMapping("/courses/save")
+    public String saveCourse(@ModelAttribute("course") Course course) {
+        ResponseEntity<Object> response = courseService.createCourse(course.getName(), course.getDepartment());
+        // Redirect to the course page
+        return "redirect:/courses/page";
+    }
+
+    @PostMapping("/courses/edit")
+    public String editCourse(@ModelAttribute("courses") Course course) {
+        String name = course.getName() != null ? course.getName() : null;
+        Department department = course.getDepartment() != null ? course.getDepartment() : null;
+        ResponseEntity<Object> response = courseService.editCourse(course.getId(), name, department);
+        // Redirect to the course page
+        return "redirect:/courses/page";
+    }
+
+    @PostMapping("/courses/delete")
+    public String deleteCourse(@ModelAttribute("courses") Course course) {
+        ResponseEntity<Object> response = courseService.deleteCourse(course.getId());
+
+        // Redirect to the course page
+        return "redirect:/courses/page";
     }
 }

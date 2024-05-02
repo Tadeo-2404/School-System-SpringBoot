@@ -19,7 +19,7 @@ public class Course {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 

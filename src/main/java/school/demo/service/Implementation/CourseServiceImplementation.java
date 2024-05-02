@@ -152,15 +152,16 @@ public class CourseServiceImplementation implements CourseService {
             }
 
             if(department == null) {
-                if(department.getId() == 0) {
-                    data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                    data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                    data.put("message", "Missing departmentId attribute");
-                    return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-                }
                 data.put("statusMessage", HttpStatus.BAD_REQUEST);
                 data.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 data.put("message", "Missing Department object");
+                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+            }
+
+            if(department.getId() == 0) {
+                data.put("statusMessage", HttpStatus.BAD_REQUEST);
+                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                data.put("message", "Missing departmentId attribute");
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
             }
 
@@ -205,21 +206,22 @@ public class CourseServiceImplementation implements CourseService {
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
             }
 
-            if(!courseRepository.existsById(id)) {
+            Optional<Course> courseOptional = courseRepository.findById(id);
+            if(courseOptional.isEmpty()) {
                 data.put("statusMessage", HttpStatus.NOT_FOUND);
                 data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                data.put("message", "Course with ID '" + course + "' not found");
+                data.put("message", "Course with ID '" + id + "' not found");
                 return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
             }
 
-            if (name == null && department.getId() == 0) {
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                data.put("message", "Missing attributes");
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-            }
+            if(department != null) {
+                if(department.getId() == 0) {
+                    data.put("statusMessage", HttpStatus.BAD_REQUEST);
+                    data.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                    data.put("message", "Missing departmentId attribute");
+                    return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                }
 
-            if(department.getId() != 0) {
                 Optional<Department> existDepartment = departmentRepository.findById(department.getId());
                 if(existDepartment.isEmpty()) {
                     data.put("statusMessage", HttpStatus.NOT_FOUND);
@@ -228,9 +230,16 @@ public class CourseServiceImplementation implements CourseService {
                     return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
                 }
                 course.setDepartment(existDepartment.orElse(null));
+            } else {
+                course.setDepartment(courseOptional.get().getDepartment());
             }
 
-            course.setName(name);
+            if(!name.isEmpty()) {
+                course.setName(name);
+            } else {
+                course.setName(courseOptional.get().getName());
+            }
+
             course.setId(id);
             Course courseEdit = courseRepository.save(course);
             data.put("data", courseEdit);
