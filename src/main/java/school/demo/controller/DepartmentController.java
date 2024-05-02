@@ -1,10 +1,14 @@
 package school.demo.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import school.demo.model.Department;
 import school.demo.service.DepartmentService;
 import school.demo.utils.DepartmentRequest;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class DepartmentController {
