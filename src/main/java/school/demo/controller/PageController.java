@@ -8,14 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import school.demo.model.Course;
-import school.demo.model.Department;
-import school.demo.model.Student;
-import school.demo.model.Teacher;
-import school.demo.service.CourseService;
-import school.demo.service.DepartmentService;
-import school.demo.service.StudentService;
-import school.demo.service.TeacherService;
+import school.demo.model.*;
+import school.demo.service.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +21,14 @@ public class PageController {
     private final StudentService studentService;
     private final TeacherService teacherService;
     private final CourseService courseService;
+    private final SectionService sectionService;
 
-    public PageController(DepartmentService departmentService, StudentService studentService, TeacherService teacherService, CourseService courseService) {
+    public PageController(DepartmentService departmentService, StudentService studentService, TeacherService teacherService, CourseService courseService, SectionService sectionService) {
         this.departmentService = departmentService;
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.courseService = courseService;
+        this.sectionService = sectionService;
     }
 
     @GetMapping("/departments/page")
@@ -228,5 +224,87 @@ public class PageController {
 
         // Redirect to the course page
         return "redirect:/courses/page";
+    }
+
+    //SECTIONS
+    @GetMapping("/sections/page")
+    public String section(Model model) {
+        ResponseEntity<Object> responseEntitySection = sectionService.getSections();
+        ResponseEntity<Object> responseEntityTeacher = teacherService.getTeachers();
+        ResponseEntity<Object> responseEntityCourse = courseService.getCourses();
+        ResponseEntity<Object> responseEntityDepartment = departmentService.getDepartments();
+
+        if(responseEntitySection.getStatusCode() == HttpStatus.NOT_FOUND) {
+            model.addAttribute("sectionsFound", false);
+        } else {
+            model.addAttribute("sectionsFound", true);
+            //teacher list
+            Map<String, Object> responseBodySection = (Map<String, Object>) responseEntitySection.getBody();
+            List<Section> sectionList = (List<Section>) responseBodySection.get("data");
+            model.addAttribute("sectionList", sectionList);
+        }
+
+        if(responseEntityTeacher.getStatusCode() == HttpStatus.NOT_FOUND) {
+            model.addAttribute("teachersFound", false);
+        } else {
+            model.addAttribute("teachersFound", true);
+            //teacher list
+            Map<String, Object> responseBodyTeacher = (Map<String, Object>) responseEntityTeacher.getBody();
+            List<Teacher> teacherList = (List<Teacher>) responseBodyTeacher.get("data");
+            model.addAttribute("teacherList", teacherList);
+        }
+
+        if(responseEntityCourse.getStatusCode() == HttpStatus.NOT_FOUND) {
+            model.addAttribute("coursesFound", false);
+        } else {
+            model.addAttribute("coursesFound", true);
+            //teacher list
+            Map<String, Object> responseBodyCourse = (Map<String, Object>) responseEntityCourse.getBody();
+            List<Course> courseList = (List<Course>) responseBodyCourse.get("data");
+            model.addAttribute("courseList", courseList);
+        }
+
+        if(responseEntityDepartment.getStatusCode() == HttpStatus.NOT_FOUND) {
+            model.addAttribute("departmentsFound", false);
+        } else {
+            model.addAttribute("departmentsFound", true);
+            //department list
+            Map<String, Object> responseBodyDepartment = (Map<String, Object>) responseEntityDepartment.getBody();
+            List<Department> departmentList = (List<Department>) responseBodyDepartment.get("data");
+            model.addAttribute("departmentList", departmentList);
+        }
+
+        model.addAttribute("section", new Section());
+        return "section";
+    }
+
+    @PostMapping("/sections/save")
+    public String saveSection(@ModelAttribute("section") Section section) {
+        String name = section.getName();
+        Department department = section.getDepartment();
+        Teacher teacher = section.getTeacher();
+        Course course = section.getCourse();
+        ResponseEntity<Object> response = sectionService.createSection(name, department.getId(), teacher.getId(), course.getId());
+        // Redirect to the course page
+        return "redirect:/sections/page";
+    }
+
+    @PostMapping("/sections/edit")
+    public String editSections(@ModelAttribute("sections") Section section) {
+        String name = section.getName() != null ? section.getName() : null;
+        Integer departmentId = section.getDepartment().getId() != 0 ? section.getDepartment().getId() : 0;
+        Integer teacherId = section.getTeacher().getId() != 0 ? section.getTeacher().getId() : 0;
+        Integer courseId = section.getCourse().getId() != 0 ? section.getCourse().getId() : 0;
+        ResponseEntity<Object> response = sectionService.editSection(section.getId(), name, departmentId, courseId, teacherId);
+        // Redirect to the course page
+        return "redirect:/sections/page";
+    }
+
+    @PostMapping("/sections/delete")
+    public String deleteSections(@ModelAttribute("sections") Section section) {
+        ResponseEntity<Object> response = sectionService.deleteSection(section.getId());
+
+        // Redirect to the course page
+        return "redirect:/sections/page";
     }
 }

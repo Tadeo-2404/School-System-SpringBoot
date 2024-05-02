@@ -25,7 +25,7 @@ public class Section {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
 
