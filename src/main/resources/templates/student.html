@@ -7,7 +7,20 @@
 </head>
 <body>
 <div>
-  <h1 class="bg-primary text-white p-3">Students List</h1>
+  <div class="bg-primary">
+    <h1 class="text-white p-3">Student List</h1>
+    <nav class="navbar navbar-expand-lg bg-primary">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-white" th:href="@{/departments/page}">Departments</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" th:href="@{/teachers/page}">Teachers</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
   <div th:if="${noStudentsFound}" class="p-3">
     <p>No students found, try creating one</p>
   </div>

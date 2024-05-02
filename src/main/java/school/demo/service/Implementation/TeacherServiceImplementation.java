@@ -168,12 +168,14 @@ public class TeacherServiceImplementation implements TeacherService {
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
             }
 
-            Optional<Department> departmentExist = departmentRepository.findById(department.getId());
-            if(departmentExist.isEmpty()) {
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                data.put("message", "Department with id '" + department.getId() +"' not found");
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+            if(department != null) {
+                Optional<Department> departmentExist = departmentRepository.findById(department.getId());
+                if(departmentExist.isEmpty()) {
+                    data.put("statusMessage", HttpStatus.NOT_FOUND);
+                    data.put("statusCode", HttpStatus.NOT_FOUND.value());
+                    data.put("message", "Department with id '" + department.getId() +"' not found");
+                    return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                }
             }
 
             Teacher teacherToSave = new Teacher(name, email);
@@ -241,12 +243,16 @@ public class TeacherServiceImplementation implements TeacherService {
                 teacherFound.get().setDepartment(existDepartment.orElse(null));
             }
 
-            if(name != null) {
+            if(!name.isEmpty()) {
                 teacherFound.get().setName(name);
+            } else {
+                teacherFound.get().setName(teacherFound.get().getName());
             }
 
-            if(email != null) {
+            if(!email.isEmpty()) {
                 teacherFound.get().setEmail(email);
+            } else {
+                teacherFound.get().setEmail(teacherFound.get().getEmail());
             }
 
             Teacher teacherEdit = teacherRepository.save(teacherFound.orElse(null));

@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import school.demo.model.Department;
 import school.demo.model.Student;
+import school.demo.model.Teacher;
 import school.demo.service.DepartmentService;
 import school.demo.service.StudentService;
+import school.demo.service.TeacherService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +23,12 @@ import java.util.Map;
 public class PageController {
     private final DepartmentService departmentService;
     private final StudentService studentService;
+    private final TeacherService teacherService;
 
-    public PageController(DepartmentService departmentService, StudentService studentService) {
+    public PageController(DepartmentService departmentService, StudentService studentService, TeacherService teacherService) {
         this.departmentService = departmentService;
         this.studentService = studentService;
+        this.teacherService = teacherService;
     }
 
     @GetMapping("/departments/page")
@@ -110,4 +114,61 @@ public class PageController {
         return "redirect:/students/page";
     }
 
+    //TEACHERS
+    @GetMapping("/teachers/page")
+    public String teacher(Model model) {
+        ResponseEntity<Object> responseEntityTeacher = teacherService.getTeachers();
+        ResponseEntity<Object> responseEntityDepartment = departmentService.getDepartments();
+        System.out.println("responseEntityDepartment: " + responseEntityDepartment);
+
+        if(responseEntityTeacher.getStatusCode() == HttpStatus.NOT_FOUND) {
+            model.addAttribute("teachersFound", false);
+        } else {
+            model.addAttribute("teachersFound", true);
+            //teacher list
+            Map<String, Object> responseBodyTeacher = (Map<String, Object>) responseEntityTeacher.getBody();
+            List<Teacher> teacherList = (List<Teacher>) responseBodyTeacher.get("data");
+            model.addAttribute("list", teacherList);
+        }
+
+        if(responseEntityDepartment.getStatusCode() == HttpStatus.NOT_FOUND) {
+            model.addAttribute("departmentsFound", false);
+        } else {
+            model.addAttribute("departmentsFound", true);
+            //department list
+            Map<String, Object> responseBodyDepartment = (Map<String, Object>) responseEntityDepartment.getBody();
+            List<Department> departmentList = (List<Department>) responseBodyDepartment.get("data");
+            model.addAttribute("departmentList", departmentList);
+        }
+
+        model.addAttribute("teacher", new Teacher());
+        return "teacher";
+    }
+
+    @PostMapping("/teachers/save")
+    public String saveTeacher(@ModelAttribute("teacher") Teacher teacher) {
+        ResponseEntity<Object> response = teacherService.createTeacher(teacher.getName(), teacher.getEmail(), teacher.getDepartment(), null);
+        // Redirect to the department page
+        return "redirect:/teachers/page";
+    }
+
+    @PostMapping("/teachers/edit")
+    public String editTeacher(@ModelAttribute("teacher") Teacher teacher) {
+        String name = teacher.getName() != null ? teacher.getName() : null;
+        String email = teacher.getEmail() != null ? teacher.getEmail() : null;
+        Department department = teacher.getDepartment() != null ? teacher.getDepartment() : null;
+        ResponseEntity<Object> response = teacherService.editTeacher(teacher.getId(), name, email, department,null);
+        System.out.println("response edit: " + response);
+        // Redirect to the student page
+        return "redirect:/teachers/page";
+    }
+
+    @PostMapping("/teachers/delete")
+    public String deleteTeacher(@ModelAttribute("teacher") Teacher teacher) {
+        ResponseEntity<Object> response = teacherService.deleteTeacher(teacher.getId());
+        System.out.println(response);
+
+        // Redirect to the department page
+        return "redirect:/teachers/page";
+    }
 }
