@@ -1,17 +1,19 @@
 package school.demo.model;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Optional;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "Teacher")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +27,19 @@ public class Teacher {
     private String email;
 
     @ManyToOne
-    @JoinColumn(name = "departmentId", nullable = false)
-    private Department departmentId;
+    @JoinColumn(name = "department_id")
+    private Department department;
 
-    public Teacher(String name, String email, Department departmentExist) {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher", cascade = CascadeType.ALL)
+    @JsonIdentityReference(alwaysAsId = true)
+    private List<Section> sections;
+
+    public Teacher(String name, String email) {
         this.name = name;
         this.email = email;
-        this.departmentId = departmentExist;
+    }
+
+    public Teacher(int teacherId) {
+        this.id = teacherId;
     }
 }

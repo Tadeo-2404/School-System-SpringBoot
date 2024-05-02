@@ -1,15 +1,5 @@
 package school.demo.utils;
+import school.demo.model.*;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import school.demo.model.Department;
-import school.demo.model.Section;
-import school.demo.model.Teacher;
-
-@Data
-@AllArgsConstructor
-public class SectionRequest {
-    private final Section section;
-    private final Department department;
-    private final Teacher teacher;
-}
+public record SectionRequest(String section, List<Student> students, int departmentId, int courseId, int teacherId) {}

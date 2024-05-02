@@ -3,21 +3,22 @@ package school.demo.service.Implementation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import school.demo.model.Course;
 import school.demo.model.Department;
+import school.demo.repository.CourseRepository;
 import school.demo.repository.DepartmentRepository;
 import school.demo.service.DepartmentService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DepartmentServiceImplementation implements DepartmentService {
     private final DepartmentRepository departmentRepository;
+    private final CourseRepository courseRepository;
 
-    public DepartmentServiceImplementation(DepartmentRepository departmentRepository) {
+    public DepartmentServiceImplementation(DepartmentRepository departmentRepository, CourseRepository courseRepository) {
         this.departmentRepository = departmentRepository;
+        this.courseRepository = courseRepository;
     }
 
     public ResponseEntity<Object> getDepartments() {
@@ -86,29 +87,41 @@ public class DepartmentServiceImplementation implements DepartmentService {
         }
     }
 
-    public ResponseEntity<Object> createDepartment(String name) {
+    public ResponseEntity<Object> createDepartment(String name, List<Course> courses) {
         Map<String, Object> data = new HashMap<>();
+
         try {
             if (name == null) {
                 data.put("statusMessage", HttpStatus.BAD_REQUEST);
                 data.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 data.put("message", "Missing Name attribute");
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-            } else {
-                Optional<Department> departmentExists = departmentRepository.findByName(name);
-                if(departmentExists.isPresent()) {
-                    data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                    data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                    data.put("message", "Duplicated attribute name");
-                    return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-                }
-
-                Department department = departmentRepository.save(new Department(name));
-                data.put("data", department);
-                data.put("statusMessage", HttpStatus.CREATED);
-                data.put("statusCode", HttpStatus.CREATED.value());
-                return new ResponseEntity<>(data, HttpStatus.CREATED);
             }
+
+            Optional<Department> departmentExists = departmentRepository.findByName(name);
+            if (departmentExists.isPresent()) {
+                data.put("statusMessage", HttpStatus.BAD_REQUEST);
+                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                data.put("message", "Duplicated attribute name");
+                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+            }
+
+            Department departmentToSave = new Department(name);
+            List<Course> list = new ArrayList<>();
+            if(courses != null) {
+                // Associate courses with the department
+                for (Course course : courses) {
+                    Course c = new Course(course.getName(), departmentToSave);
+                    list.add(c);
+                }
+            }
+
+            departmentToSave.setCourses(list);
+            Department departmentSaved = departmentRepository.save(departmentToSave);
+            data.put("data", departmentSaved);
+            data.put("statusMessage", HttpStatus.CREATED);
+            data.put("statusCode", HttpStatus.CREATED.value());
+            return new ResponseEntity<>(data, HttpStatus.CREATED);
         } catch (Exception e) {
             data.put("message", e.getMessage());
             data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -117,8 +130,9 @@ public class DepartmentServiceImplementation implements DepartmentService {
         }
     }
 
-    public ResponseEntity<Object> editDepartment(int id, String name) {
+    public ResponseEntity<Object> editDepartment(int id, String name, List<Course> courses) {
         Map<String, Object> data = new HashMap<>();
+        Department departmentToSave = new Department();
 
         try {
             if(id == 0) {
@@ -136,7 +150,6 @@ public class DepartmentServiceImplementation implements DepartmentService {
             }
 
             boolean existDepartment = departmentRepository.existsById(id);
-            System.out.println("existDepartment: " + existDepartment);
             if(!existDepartment) {
                 data.put("statusMessage", HttpStatus.NOT_FOUND);
                 data.put("statusCode", HttpStatus.NOT_FOUND.value());
@@ -144,7 +157,21 @@ public class DepartmentServiceImplementation implements DepartmentService {
                 return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
             }
 
-            Department department = departmentRepository.save(new Department(id, name));
+            List<Course> list = new ArrayList<>();
+            //store the courses
+            if(courses != null) {
+                if(courses.size() > 0) {
+                    // Associate courses with the department
+                    for (Course course : courses) {
+                        list.add(course);
+                    }
+                    departmentToSave.setCourses(list);
+                }
+            }
+
+            departmentToSave.setId(id);
+            departmentToSave.setName(name);
+            Department department = departmentRepository.save(departmentToSave);
             data.put("data", department);
             data.put("statusMessage", HttpStatus.OK);
             data.put("statusCode", HttpStatus.OK.value());

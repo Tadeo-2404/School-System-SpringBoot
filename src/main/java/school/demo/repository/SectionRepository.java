@@ -9,14 +9,16 @@ import java.util.Optional;
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Integer> {
     Optional<Section> findByName(String name);
-    @Query("SELECT s FROM Section s WHERE s.departmentId.id = :departmentId")
+    @Query("SELECT s FROM Section s WHERE s.department.id = :departmentId")
     List<Section> findByDepartmentId(Integer departmentId);
-    @Query("SELECT s FROM Section s WHERE s.departmentId.name = :name")
+    @Query("SELECT s FROM Section s WHERE s.department.name = :name")
     List<Section> findByDepartmentName(String name);
-    @Query("SELECT s FROM Section s WHERE s.teacherId.id = :teacherId")
+    @Query("SELECT s FROM Section s WHERE s.teacher.id = :teacherId")
     List<Section> findByTeacherId(Integer teacherId);
-    @Query("SELECT s FROM Section s WHERE s.teacherId.name = :name")
+    @Query("SELECT s FROM Section s WHERE s.teacher.name = :name")
     List<Section> findByTeacherName(String name);
-    @Query("SELECT s FROM Section s WHERE s.teacherId.email = :email")
+    @Query("SELECT s FROM Section s WHERE s.teacher.email = :email")
     List<Section> findByTeacherEmail(String email);
+    @Query("SELECT s FROM Section s WHERE s.course.id = :courseId")
+    List<Section> findByCourseId(Integer courseId);
 }

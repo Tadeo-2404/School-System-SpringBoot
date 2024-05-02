@@ -3,12 +3,8 @@ package school.demo.service.Implementation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import school.demo.model.Department;
-import school.demo.model.Section;
-import school.demo.model.Teacher;
-import school.demo.repository.DepartmentRepository;
-import school.demo.repository.SectionRepository;
-import school.demo.repository.TeacherRepository;
+import school.demo.model.*;
+import school.demo.repository.*;
 import school.demo.service.SectionService;
 
 import java.util.HashMap;
@@ -21,11 +17,15 @@ public class SectionServiceImplementation implements SectionService {
     private final SectionRepository sectionRepository;
     private final DepartmentRepository departmentRepository;
     private final TeacherRepository teacherRepository;
+    private final CourseRepository courseRepository;
+    private final StudentRepository studentRepository;
 
-    public SectionServiceImplementation(SectionRepository sectionRepository, DepartmentRepository departmentRepository, TeacherRepository teacherRepository) {
+    public SectionServiceImplementation(SectionRepository sectionRepository, DepartmentRepository departmentRepository, TeacherRepository teacherRepository, CourseRepository courseRepository, StudentRepository studentRepository) {
         this.sectionRepository = sectionRepository;
         this.departmentRepository = departmentRepository;
         this.teacherRepository = teacherRepository;
+        this.courseRepository = courseRepository;
+        this.studentRepository = studentRepository;
     }
 
     public ResponseEntity<Object> getSections() {
@@ -218,8 +218,9 @@ public class SectionServiceImplementation implements SectionService {
         }
     }
 
-    public ResponseEntity<Object> createSection(String name, Department department, Teacher teacher) {
+    public ResponseEntity<Object> createSection(String name, Integer departmentId, Integer courseId, Integer teacherId) {
         Map<String, Object> data = new HashMap<>();
+
         try {
             //check if attributes are present
             if(name == null) {
@@ -229,15 +230,22 @@ public class SectionServiceImplementation implements SectionService {
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
             }
 
-            if(department == null) {
-                data.put("message", "Missing Department object");
+            if(departmentId == null) {
+                data.put("message", "Missing departmentId attribute");
                 data.put("statusMessage", HttpStatus.BAD_REQUEST);
                 data.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
             }
 
-            if(teacher == null) {
-                data.put("message", "Missing Teacher object");
+            if(courseId == null) {
+                data.put("message", "Missing courseId attribute");
+                data.put("statusMessage", HttpStatus.BAD_REQUEST);
+                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+            }
+
+            if(teacherId == null) {
+                data.put("message", "Missing teacherId attribute");
                 data.put("statusMessage", HttpStatus.BAD_REQUEST);
                 data.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
@@ -252,22 +260,33 @@ public class SectionServiceImplementation implements SectionService {
             }
 
             //checks if Department exists based on its id
-            if(!departmentRepository.existsById(department.getId())) {
-                data.put("message", "Department with id '" + department.getId() + "' does not exist");
+            Optional<Department> department = departmentRepository.findById(departmentId);
+            if(department.isEmpty()) {
+                data.put("message", "Department with id '" + departmentId + "' does not exist");
+                data.put("statusMessage", HttpStatus.NOT_FOUND);
+                data.put("statusCode", HttpStatus.NOT_FOUND.value());
+                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+            }
+
+            //checks if Course exists based on its id
+            Optional<Course> course = courseRepository.findById(courseId);
+            if(course.isEmpty()) {
+                data.put("message", "Course with id '" + courseId + "' does not exist");
                 data.put("statusMessage", HttpStatus.NOT_FOUND);
                 data.put("statusCode", HttpStatus.NOT_FOUND.value());
                 return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
             }
 
             //checks if Teacher exists based on its id
-            if(!teacherRepository.existsById(teacher.getId())) {
-                data.put("message", "Teacher with id '" + teacher.getId() + "' does not exist");
+            Optional<Teacher> teacher = teacherRepository.findById(teacherId);
+            if(teacher.isEmpty()) {
+                data.put("message", "Teacher with id '" + teacherId + "' does not exist");
                 data.put("statusMessage", HttpStatus.NOT_FOUND);
                 data.put("statusCode", HttpStatus.NOT_FOUND.value());
                 return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
             }
 
-            Section section = sectionRepository.save(new Section(name, department, teacher));
+            Section section = sectionRepository.save(new Section(name, department.orElse(null), course.orElse(null), teacher.orElse(null)));
             data.put("data", section);
             data.put("message", "Section created successfully");
             data.put("statusMessage", HttpStatus.OK);
@@ -281,7 +300,7 @@ public class SectionServiceImplementation implements SectionService {
         }
     }
 
-    public ResponseEntity<Object> editSection(Integer id, String name, Department department, Teacher teacher) {
+    public ResponseEntity<Object> editSection(Integer id, String name, Integer departmentId, Integer courseId, Integer teacherId) {
         Map<String, Object> data = new HashMap<>();
         //if any attribute is not null it'll be assigned to this object
         Section sectionToUpdate = new Section();
@@ -304,27 +323,42 @@ public class SectionServiceImplementation implements SectionService {
             }
 
             //check if department object exists
-            if(department != null) {
+            if(departmentId != null) {
                 //checks if Department exists based on its id
-                if(!departmentRepository.existsById(department.getId())) {
-                    data.put("message", "Department with id '" + department.getId() + "' does not exist");
+                Optional<Department> department = departmentRepository.findById(departmentId);
+                if(department.isEmpty()) {
+                    data.put("message", "Department with id '" + departmentId + "' does not exist");
                     data.put("statusMessage", HttpStatus.NOT_FOUND);
                     data.put("statusCode", HttpStatus.NOT_FOUND.value());
                     return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
                 }
-                sectionToUpdate.setDepartmentId(department);
+                sectionToUpdate.setDepartment(department.orElse(null));
+            }
+
+            //check if the Course object exists
+            if(courseId != null) {
+                //checks if Teacher exists based on its id
+                Optional<Course> course = courseRepository.findById(courseId);
+                if(course.isEmpty()) {
+                    data.put("message", "Course with id '" + courseId + "' does not exist");
+                    data.put("statusMessage", HttpStatus.NOT_FOUND);
+                    data.put("statusCode", HttpStatus.NOT_FOUND.value());
+                    return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                }
+                sectionToUpdate.setCourse(course.orElse(null));
             }
 
             //check if teacher object exists
-            if(teacher != null) {
+            if(teacherId != null) {
                 //checks if Teacher exists based on its id
-                if(!teacherRepository.existsById(teacher.getId())) {
-                    data.put("message", "Teacher with id '" + teacher.getId() + "' does not exist");
+                Optional<Teacher> teacher = teacherRepository.findById(teacherId);
+                if(teacher.isEmpty()) {
+                    data.put("message", "Teacher with id '" + teacherId + "' does not exist");
                     data.put("statusMessage", HttpStatus.NOT_FOUND);
                     data.put("statusCode", HttpStatus.NOT_FOUND.value());
                     return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
                 }
-                sectionToUpdate.setTeacherId(teacher);
+                sectionToUpdate.setTeacher(teacher.orElse(null));
             }
 
             //if name is not null then assign it

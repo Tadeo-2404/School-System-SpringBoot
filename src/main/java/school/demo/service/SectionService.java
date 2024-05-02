@@ -1,7 +1,11 @@
 package school.demo.service;
 import org.springframework.http.ResponseEntity;
+import school.demo.model.Course;
 import school.demo.model.Department;
+import school.demo.model.Student;
 import school.demo.model.Teacher;
+
+import java.util.List;
 
 public interface SectionService {
     ResponseEntity<Object> getSections();
@@ -12,7 +16,7 @@ public interface SectionService {
     ResponseEntity<Object> getSectionsByTeacherId(Integer teacherId);
     ResponseEntity<Object> getSectionsByTeacherName(String name);
     ResponseEntity<Object> getSectionsByTeacherEmail(String email);
-    ResponseEntity<Object> createSection(String name, Department department, Teacher teacher);
-    ResponseEntity<Object> editSection(Integer id, String name, Department department, Teacher teacher);
+    ResponseEntity<Object> createSection(String name, Integer departmentId, Integer courseId, Integer teacherId);
+    ResponseEntity<Object> editSection(Integer id, String name, Integer departmentId, Integer courseId, Integer teacherId);
     ResponseEntity<Object> deleteSection(Integer id);
 }

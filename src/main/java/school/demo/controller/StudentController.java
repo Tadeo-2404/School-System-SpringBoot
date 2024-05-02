@@ -2,8 +2,12 @@ package school.demo.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import school.demo.model.Section;
 import school.demo.model.Student;
 import school.demo.service.StudentService;
+import school.demo.utils.StudentRequest;
+
+import java.util.List;
 
 @RestController
 public class StudentController {
@@ -29,13 +33,17 @@ public class StudentController {
     }
 
     @PostMapping("/students")
-    public ResponseEntity<Object> createStudent(@RequestBody Student student) {
-        return studentService.createStudent(student.getName(), student.getEmail());
+    public ResponseEntity<Object> createStudent(@RequestBody StudentRequest studentRequest) {
+        Student student = studentRequest.student();
+        List<Section> sections = studentRequest.sections();
+        return studentService.createStudent(student.getName(), student.getEmail(), sections);
     }
 
     @PutMapping("/students")
-    public ResponseEntity<Object> editStudent(@RequestBody Student student) {
-        return studentService.editStudent(student.getId(), student.getName(), student.getEmail());
+    public ResponseEntity<Object> editStudent(@RequestBody StudentRequest studentRequest) {
+        Student student = studentRequest.student();
+        List<Section> sections = student.getSections();
+        return studentService.editStudent(student.getId(), student.getName(), student.getEmail(), sections);
     }
 
     @DeleteMapping("/students")

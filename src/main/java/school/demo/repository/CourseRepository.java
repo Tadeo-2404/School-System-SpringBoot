@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
     Optional<Course> findByName(String name);
-    @Query("SELECT c FROM Course c WHERE c.departmentId.id = :departmentId")
+    @Query("SELECT c FROM Course c WHERE c.department.id = :departmentId")
     List<Course> findByDepartmentId(int departmentId);
-    @Query("SELECT c FROM Course c WHERE c.departmentId.name = :name")
+    @Query("SELECT c FROM Course c WHERE c.department.name = :name")
     List<Course> findByDepartmentName(String name);
 }

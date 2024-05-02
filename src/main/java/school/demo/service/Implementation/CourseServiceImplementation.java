@@ -227,7 +227,7 @@ public class CourseServiceImplementation implements CourseService {
                     data.put("message", "Department with ID '" + department.getId() + "' not found");
                     return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
                 }
-                course.setDepartmentId(existDepartment.orElse(null));
+                course.setDepartment(existDepartment.orElse(null));
             }
 
             course.setName(name);
@@ -259,7 +259,7 @@ public class CourseServiceImplementation implements CourseService {
 
             if(!courseRepository.existsById(id)) {
                 data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_ACCEPTABLE.value());
+                data.put("statusCode", HttpStatus.NOT_FOUND.value());
                 data.put("message", "Course with ID '" + id + "' not found");
                 return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
             }

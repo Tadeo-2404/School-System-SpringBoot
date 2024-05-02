@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import school.demo.model.Department;
 import school.demo.service.DepartmentService;
+import school.demo.utils.DepartmentRequest;
 
 @RestController
 public class DepartmentController {
@@ -29,13 +30,13 @@ public class DepartmentController {
     }
 
     @PostMapping("/departments")
-    public ResponseEntity<Object> createDepartment(@RequestBody Department department) {
-        return departmentService.createDepartment(department.getName());
+    public ResponseEntity<Object> createDepartment(@RequestBody DepartmentRequest departmentRequest) {
+        return departmentService.createDepartment(departmentRequest.department().getName(), departmentRequest.courses());
     }
 
     @PutMapping("/departments")
-    public ResponseEntity<Object> editDepartment(@RequestBody Department department) {
-        return departmentService.editDepartment(department.getId(), department.getName());
+    public ResponseEntity<Object> editDepartment(@RequestBody DepartmentRequest departmentRequest) {
+        return departmentService.editDepartment(departmentRequest.department().getId() ,departmentRequest.department().getName(), departmentRequest.courses());
     }
 
     @DeleteMapping("/departments")

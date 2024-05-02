@@ -3,24 +3,27 @@ package school.demo.service.Implementation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import school.demo.model.Course;
 import school.demo.model.Department;
+import school.demo.model.Section;
 import school.demo.model.Teacher;
 import school.demo.repository.DepartmentRepository;
+import school.demo.repository.SectionRepository;
 import school.demo.repository.TeacherRepository;
 import school.demo.service.TeacherService;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 public class TeacherServiceImplementation implements TeacherService {
     private final TeacherRepository teacherRepository;
     private final DepartmentRepository departmentRepository;
+    private final SectionRepository sectionRepository;
 
-    public TeacherServiceImplementation(TeacherRepository teacherRepository, DepartmentRepository departmentRepository) {
+    public TeacherServiceImplementation(TeacherRepository teacherRepository, DepartmentRepository departmentRepository, SectionRepository sectionRepository) {
         this.teacherRepository = teacherRepository;
         this.departmentRepository = departmentRepository;
+        this.sectionRepository = sectionRepository;
     }
 
     public ResponseEntity<Object> getTeachers() {
@@ -136,21 +139,26 @@ public class TeacherServiceImplementation implements TeacherService {
         }
     }
 
-    public ResponseEntity<Object> createTeacher(String name, String email, Department department) {
+    public ResponseEntity<Object> createTeacher(String name, String email, Department department, List<Section> sections) {
         Map<String, Object> data = new HashMap<>();
 
         try {
-            if(department == null) {
+            if(department != null) {
                 if(department.getId() == 0) {
                     data.put("statusMessage", HttpStatus.BAD_REQUEST);
                     data.put("statusCode", HttpStatus.BAD_REQUEST.value());
                     data.put("message", "Missing departmentId attribute");
                     return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
                 }
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                data.put("message", "Missing Department object");
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+            }
+
+            if (sections != null) {
+                if (sections.isEmpty()) {
+                    data.put("message", "Missing student sections list");
+                    data.put("statusMessage", HttpStatus.BAD_REQUEST);
+                    data.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                    return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                }
             }
 
             if (name == null && email == null) {
@@ -168,7 +176,21 @@ public class TeacherServiceImplementation implements TeacherService {
                 return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
             }
 
-            Teacher teacher = teacherRepository.save(new Teacher(name, email, departmentExist.orElse(null)));
+            Teacher teacherToSave = new Teacher(name, email);
+            List<Section> list = new ArrayList<>();
+            if(sections != null) {
+                // Associate section with the teacher
+                for (Section section : sections) {
+                    Section s = new Section(section.getName(), section.getDepartment(), section.getCourse(), section.getTeacher());
+                    list.add(s);
+                }
+            }
+
+            teacherToSave.setName(name);
+            teacherToSave.setEmail(email);
+            teacherToSave.setDepartment(department);
+            teacherToSave.setSections(list);
+            Teacher teacher = teacherRepository.save(teacherToSave);
             data.put("data", teacher);
             data.put("statusMessage", HttpStatus.CREATED);
             data.put("statusCode", HttpStatus.CREATED.value());
@@ -182,9 +204,8 @@ public class TeacherServiceImplementation implements TeacherService {
         }
     }
 
-    public ResponseEntity<Object> editTeacher(int id, String name, String email, Department department) {
+    public ResponseEntity<Object> editTeacher(int id, String name, String email, Department department, List<Section> sections) {
         Map<String, Object> data = new HashMap<>();
-        Teacher teacher = new Teacher();
 
         try {
             if(id == 0) {
@@ -201,15 +222,15 @@ public class TeacherServiceImplementation implements TeacherService {
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
             }
 
-            if (name != null) {
-                teacher.setName(name);
+            Optional<Teacher> teacherFound = teacherRepository.findById(id);
+            if(teacherFound.isEmpty()) {
+                data.put("statusMessage", HttpStatus.NOT_FOUND);
+                data.put("statusCode", HttpStatus.NOT_FOUND.value());
+                data.put("message", "Teacher with ID '" + id + "' not found");
+                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
             }
 
-            if (email != null) {
-                teacher.setEmail(email);
-            }
-
-            if(department.getId() != 0) {
+            if(department != null) {
                 Optional<Department> existDepartment = departmentRepository.findById(department.getId());
                 if(existDepartment.isEmpty()) {
                     data.put("statusMessage", HttpStatus.NOT_FOUND);
@@ -217,11 +238,18 @@ public class TeacherServiceImplementation implements TeacherService {
                     data.put("message", "Department with ID '" + department.getId() + "' not found");
                     return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
                 }
-                teacher.setDepartmentId(existDepartment.orElse(null));
+                teacherFound.get().setDepartment(existDepartment.orElse(null));
             }
 
-            teacher.setId(id);
-            Teacher teacherEdit = teacherRepository.save(teacher);
+            if(name != null) {
+                teacherFound.get().setName(name);
+            }
+
+            if(email != null) {
+                teacherFound.get().setEmail(email);
+            }
+
+            Teacher teacherEdit = teacherRepository.save(teacherFound.orElse(null));
             data.put("data", teacherEdit);
             data.put("statusMessage", HttpStatus.OK);
             data.put("statusCode", HttpStatus.OK.value());

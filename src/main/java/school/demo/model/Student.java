@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,8 +22,16 @@ public class Student {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    public Student(String studentEmail, String studentName) {
-        this.email = studentEmail;
-        this.name = studentName;
+    @ManyToMany
+    @JoinTable(
+            name = "SectionEnrollment",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "section_id"))
+    private List<Section> sections;
+
+    public Student(String name, String email, List<Section> sections) {
+        this.name = name;
+        this.email = email;
+        this.sections = sections;
     }
 }

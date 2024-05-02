@@ -3,20 +3,24 @@ package school.demo.service.Implementation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import school.demo.model.Course;
+import school.demo.model.Department;
+import school.demo.model.Section;
 import school.demo.model.Student;
+import school.demo.repository.SectionRepository;
 import school.demo.repository.StudentRepository;
 import school.demo.service.StudentService;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 public class StudentServiceImplementation implements StudentService {
     private final StudentRepository studentRepository;
+    private final SectionRepository sectionRepository;
 
-    public StudentServiceImplementation(StudentRepository studentRepository) {
+    public StudentServiceImplementation(StudentRepository studentRepository, SectionRepository sectionRepository) {
         this.studentRepository = studentRepository;
+        this.sectionRepository = sectionRepository;
     }
 
     public ResponseEntity<Object> getStudentByID(int studentId) {
@@ -108,20 +112,51 @@ public class StudentServiceImplementation implements StudentService {
         }
     }
 
-    public ResponseEntity<Object> createStudent(String student_name, String student_email) {
+    public ResponseEntity<Object> createStudent(String student_name, String student_email, List<Section> sections) {
         Map<String, Object> data = new HashMap<>();
+
         try {
-            if (student_email == null || student_name == null) {
+            if (student_name == null) {
+                data.put("message", "Missing student name attribute");
                 data.put("statusMessage", HttpStatus.BAD_REQUEST);
                 data.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-            } else {
-                Student student = studentRepository.save(new Student(student_email, student_name));
-                data.put("data", student);
-                data.put("statusMessage", HttpStatus.CREATED);
-                data.put("statusCode", HttpStatus.CREATED.value());
-                return new ResponseEntity<>(data, HttpStatus.CREATED);
             }
+
+            if (student_email == null) {
+                data.put("message", "Missing student email attribute");
+                data.put("statusMessage", HttpStatus.BAD_REQUEST);
+                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+            }
+
+            Student studentToSave = new Student();
+            List<Section> list = new ArrayList<>();
+            if (sections != null) {
+                if (sections.isEmpty()) {
+                    data.put("message", "Missing student sections list");
+                    data.put("statusMessage", HttpStatus.BAD_REQUEST);
+                    data.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                    return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                }
+
+                //check if all sections exist
+                for (Section s: sections) {
+                    if(!sectionRepository.existsById(s.getId())) {
+                        data.put("message", "Section with id '" + s.getId() + "' does not exist");
+                        data.put("statusMessage", HttpStatus.NOT_FOUND);
+                        data.put("statusCode", HttpStatus.NOT_FOUND.value());
+                        return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                    }
+                    list.add(s);
+                }
+            }
+
+            Student student = studentRepository.save(new Student(student_name, student_email, list));
+            data.put("data", student);
+            data.put("statusMessage", HttpStatus.CREATED);
+            data.put("statusCode", HttpStatus.CREATED.value());
+            return new ResponseEntity<>(data, HttpStatus.CREATED);
         } catch (Exception e) {
             data.put("message", e.getMessage());
             data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -130,23 +165,24 @@ public class StudentServiceImplementation implements StudentService {
         }
     }
 
-    public ResponseEntity<Object> editStudent(int student_id, String student_name, String student_email) {
+    public ResponseEntity<Object> editStudent(int student_id, String student_name, String student_email, List<Section> sections) {
         Map<String, Object> data = new HashMap<>();
-        Integer studentIdInteger = student_id;
 
         try {
-            if(studentIdInteger == null) {
+            if(student_id == 0) {
                 data.put("statusMessage", HttpStatus.BAD_REQUEST);
                 data.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 data.put("message", "Missing ID attribute");
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
             }
 
-            if (student_email == null && student_name == null) {
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                data.put("message", "Missing Name and Email attributes");
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+            if (student_email != null) {
+                if (studentRepository.findByEmail(student_email).isPresent()) {
+                    data.put("statusMessage", HttpStatus.BAD_REQUEST);
+                    data.put("statusCode", HttpStatus.BAD_REQUEST.value());
+                    data.put("message", "Duplicate email attribute");
+                    return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                }
             }
 
             boolean existStudent = studentRepository.existsById(student_id);
@@ -157,7 +193,19 @@ public class StudentServiceImplementation implements StudentService {
                 return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
             }
 
-            Student student = studentRepository.save(new Student(student_id, student_email, student_name));
+            if (!sections.isEmpty()) {
+                //check if all students exist
+                for (Section s: sections) {
+                    if(!sectionRepository.existsById(s.getId())) {
+                        data.put("message", "Section with id '" + s.getId() + "' does not exist");
+                        data.put("statusMessage", HttpStatus.NOT_FOUND);
+                        data.put("statusCode", HttpStatus.NOT_FOUND.value());
+                        return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                    }
+                }
+            }
+
+            Student student = studentRepository.save(new Student(student_name, student_email, sections));
             data.put("data", student);
             data.put("statusMessage", HttpStatus.OK);
             data.put("statusCode", HttpStatus.OK.value());

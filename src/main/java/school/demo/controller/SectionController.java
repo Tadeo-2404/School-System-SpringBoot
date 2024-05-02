@@ -1,12 +1,14 @@
 package school.demo.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import school.demo.model.Department;
-import school.demo.model.Section;
-import school.demo.model.Teacher;
+import school.demo.model.*;
 import school.demo.service.SectionService;
 import school.demo.utils.SectionRequest;
+import school.demo.utils.SectionRequestEdit;
+
+import java.util.List;
 
 @RestController
 public class SectionController {
@@ -48,18 +50,21 @@ public class SectionController {
 
     @PostMapping("/sections")
     public ResponseEntity<Object> createSection(@RequestBody SectionRequest sectionRequest) {
-        Section section = sectionRequest.getSection();
-        Department department = sectionRequest.getDepartment();
-        Teacher teacher = sectionRequest.getTeacher();
-        return sectionService.createSection(section.getName(), department, teacher);
+        String nameSection = sectionRequest.section();
+        int department = sectionRequest.departmentId();
+        int course = sectionRequest.courseId();
+        int teacher = sectionRequest.teacherId();
+        return sectionService.createSection(nameSection, department, course, teacher);
     }
 
     @PutMapping("/sections")
-    public ResponseEntity<Object> editSection(@RequestBody SectionRequest sectionRequest) {
-        Section section = sectionRequest.getSection();
-        Department department = sectionRequest.getDepartment();
-        Teacher teacher = sectionRequest.getTeacher();
-        return sectionService.editSection(section.getId(), section.getName(), department, teacher);
+    public ResponseEntity<Object> editSection(@RequestBody SectionRequestEdit sectionRequestEdit) {
+        int id = sectionRequestEdit.sectionId();
+        String nameSection = sectionRequestEdit.section();
+        int department = sectionRequestEdit.departmentId();
+        int course = sectionRequestEdit.courseId();
+        int teacher = sectionRequestEdit.teacherId();
+        return sectionService.editSection(id ,nameSection, department, course, teacher);
     }
 
     @DeleteMapping("/sections/{section_id}")

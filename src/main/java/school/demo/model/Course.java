@@ -19,12 +19,16 @@ public class Course {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "departmentId", nullable = false)
-    private Department departmentId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     public Course(String name, Department department) {
         this.name = name;
-        this.departmentId = department;
+        this.department = department;
+    }
+
+    public Course(int courseId) {
+        this.id = courseId;
     }
 }

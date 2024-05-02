@@ -3,9 +3,12 @@ package school.demo.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import school.demo.model.Department;
+import school.demo.model.Section;
 import school.demo.model.Teacher;
 import school.demo.service.TeacherService;
 import school.demo.utils.TeacherRequest;
+
+import java.util.List;
 
 @RestController
 public class TeacherController {
@@ -41,16 +44,18 @@ public class TeacherController {
 
     @PostMapping("/teachers")
     public ResponseEntity<Object> createTeacher(@RequestBody TeacherRequest teacherRequest) {
-        Teacher teacher = teacherRequest.getTeacher();
-        Department department = teacherRequest.getDepartment();
-        return teacherService.createTeacher(teacher.getName(), teacher.getEmail(), department);
+        Teacher teacher = teacherRequest.teacher();
+        Department department = teacherRequest.department();
+        List<Section> sections = teacherRequest.sections();
+        return teacherService.createTeacher(teacher.getName(), teacher.getEmail(), department, sections);
     }
 
     @PutMapping("/teachers")
     public ResponseEntity<Object> editTeacher(@RequestBody TeacherRequest teacherRequest) {
-        Teacher teacher = teacherRequest.getTeacher();
-        Department department = teacherRequest.getDepartment();
-        return teacherService.editTeacher(teacher.getId(), teacher.getName(), teacher.getEmail(), department);
+        Teacher teacher = teacherRequest.teacher();
+        Department department = teacherRequest.department();
+        List<Section> sections = teacherRequest.sections();
+        return teacherService.editTeacher(teacher.getId(), teacher.getName(), teacher.getEmail(), department, sections);
     }
 
     @DeleteMapping("/teachers")

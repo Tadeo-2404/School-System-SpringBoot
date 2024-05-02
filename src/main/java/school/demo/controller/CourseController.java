@@ -41,15 +41,15 @@ public class CourseController {
 
     @PostMapping("/courses")
     public ResponseEntity<Object> createCourse(@RequestBody CourseRequest courseRequest) {
-        Course course = courseRequest.getCourse();
-        Department department = courseRequest.getDepartment();
+        Course course = courseRequest.course();
+        Department department = courseRequest.department();
         return courseService.createCourse(course.getName(), department);
     }
 
     @PutMapping("/courses")
     public ResponseEntity<Object> editCourse(@RequestBody CourseRequest courseRequest) {
-        Course course = courseRequest.getCourse();
-        Department department = courseRequest.getDepartment();
+        Course course = courseRequest.course();
+        Department department = courseRequest.department();
         return courseService.editCourse(course.getId(), course.getName(), department);
     }
 

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,16 +22,32 @@ public class Section {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "departmentId", nullable = false)
-    private Department departmentId;
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "course_id")
+    private Course course;
 
     @ManyToOne
-    @JoinColumn(name = "teacherId", nullable = false)
-    private Teacher teacherId;
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
 
-    public Section(String name, Department department, Teacher teacher) {
+    @ManyToMany(mappedBy = "sections")
+    private List<Student> students;
+
+    public Section(String name, Department department, Course course, Teacher teacher, List<Student> students) {
         this.name = name;
-        this.departmentId = department;
-        this.teacherId = teacher;
+        this.department = department;
+        this.course = course;
+        this.teacher = teacher;
+        this.students = students;
+    }
+
+    public Section(String name, Department department, Course course, Teacher teacher) {
+        this.name = name;
+        this.department = department;
+        this.course = course;
+        this.teacher = teacher;
     }
 }
