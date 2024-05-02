@@ -130,7 +130,6 @@ public class StudentServiceImplementation implements StudentService {
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
             }
 
-            Student studentToSave = new Student();
             List<Section> list = new ArrayList<>();
             if (sections != null) {
                 if (sections.isEmpty()) {
@@ -193,19 +192,21 @@ public class StudentServiceImplementation implements StudentService {
                 return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
             }
 
-            if (!sections.isEmpty()) {
-                //check if all students exist
-                for (Section s: sections) {
-                    if(!sectionRepository.existsById(s.getId())) {
-                        data.put("message", "Section with id '" + s.getId() + "' does not exist");
-                        data.put("statusMessage", HttpStatus.NOT_FOUND);
-                        data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                        return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+            if(sections != null) {
+                if (!sections.isEmpty()) {
+                    //check if all students exist
+                    for (Section s: sections) {
+                        if(!sectionRepository.existsById(s.getId())) {
+                            data.put("message", "Section with id '" + s.getId() + "' does not exist");
+                            data.put("statusMessage", HttpStatus.NOT_FOUND);
+                            data.put("statusCode", HttpStatus.NOT_FOUND.value());
+                            return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                        }
                     }
                 }
             }
 
-            Student student = studentRepository.save(new Student(student_name, student_email, sections));
+            Student student = studentRepository.save(new Student(student_id, student_name, student_email, sections));
             data.put("data", student);
             data.put("statusMessage", HttpStatus.OK);
             data.put("statusCode", HttpStatus.OK.value());

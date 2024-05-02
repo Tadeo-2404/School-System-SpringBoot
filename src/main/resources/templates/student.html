@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Student Page</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div>
+  <h1 class="bg-primary text-white p-3">Students List</h1>
+  <div th:if="${noStudentsFound}" class="p-3">
+    <p>No students found, try creating one</p>
+  </div>
+  <div th:unless="${noStudentsFound}">
+    <table class="table">
+      <thead>
+      <tr>
+        <th cope="col">ID</th>
+        <th cope="col">Name</th>
+        <th cope="col">Email</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="student : ${list}">
+        <td th:text="${student.id}"></td>
+        <td th:text="${student.name}"></td>
+        <td th:text="${student.email}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <form action="#" th:action="@{/students/save}" method="post" th:object="${student}">
+    <fieldset>
+      <legend>Add Student</legend>
+      <div class="form-group">
+        <label for="name">Student Name</label>
+        <input th:field="*{name}" type="text" class="form-control" id="name" name="name" placeholder="Student name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Student Email</label>
+        <input th:field="*{email}" type="email" class="form-control" id="email" name="email" placeholder="Student email" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </fieldset>
+  </form>
+</div>
+
+<div th:if="${!noStudentsFound}">
+  <div class="container mt-4">
+    <form action="#" th:action="@{/students/edit}" method="post" th:object="${student}">
+      <fieldset>
+        <legend>Edit Student</legend>
+        <div class="form-group">
+          <label for="id">Student Id</label>
+          <input th:field="*{id}" type="number" min="1" class="form-control" id="id" name="id" placeholder="Student id" required>
+        </div>
+        <div class="form-group">
+          <label for="nameEdit">Student Name</label>
+          <input th:field="*{name}" type="text" class="form-control" id="nameEdit" name="name" placeholder="Student name" required>
+        </div>
+        <div class="form-group">
+          <label for="emailEdit">Student Email</label>
+          <input th:field="*{email}" type="email" class="form-control" id="emailEdit" name="email" placeholder="Student email" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="container mt-4">
+    <form action="#" th:action="@{/students/delete}" method="post" th:object="${student}">
+      <fieldset>
+        <legend>Delete Student</legend>
+        <div class="form-group">
+          <label for="idDelete">Student Id</label>
+          <input th:field="*{id}" type="number" min="1" class="form-control" id="idDelete" name="id" placeholder="Student id" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
