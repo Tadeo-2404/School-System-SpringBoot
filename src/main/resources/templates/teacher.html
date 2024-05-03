@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Teacher Page</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div>
+  <div class="bg-primary">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h1 class="text-white p-3">Teacher List</h1>
+        </div>
+        <div class="col-md-6">
+          <nav class="navbar navbar-expand-lg bg-primary">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/departments/page}">Departments</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/sections/page}">Sections</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/courses/page}">Courses</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/students/page}">Students</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${!teachersFound}" class="p-3">
+    <p>No teachers found, try creating one</p>
+  </div>
+  <div th:unless="${!teachersFound}">
+    <table class="table">
+      <thead>
+      <tr>
+        <th cope="col">ID</th>
+        <th cope="col">Name</th>
+        <th cope="col">Email</th>
+        <th cope="col">Department</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="teacher : ${list}">
+        <td th:text="${teacher.id}"></td>
+        <td th:text="${teacher.name}"></td>
+        <td th:text="${teacher.email}"></td>
+        <td th:text="${teacher.department.name}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div th:if="${param.errorMessage}" class="alert alert-danger" role="alert">
+  <p th:text="${param.errorMessage}"></p>
+</div>
+<div class="container mt-4">
+  <form action="#" th:action="@{/teachers/save}" method="post" th:object="${teacher}">
+    <fieldset>
+      <legend>Add Teacher</legend>
+      <div class="form-group">
+        <label for="name">Teacher Name</label>
+        <input th:field="*{name}" type="text" class="form-control" id="name" name="name" placeholder="Teacher name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Teacher Email</label>
+        <input th:field="*{email}" type="email" class="form-control" id="email" name="email" placeholder="Teacher email" required>
+      </div>
+      <div class="form-group">
+        <label for="department">Departments</label>
+        <div th:if="${departmentsFound}">
+          <select th:field="*{department}" class="form-control" id="department" name="department" required>
+            <option value="">Select Department</option>
+            <option th:each="department : ${departmentList}" th:value="${department.id}" th:text="${department.name}"></option>
+          </select>
+        </div>
+        <div th:unless="${departmentsFound}" class="p-2">
+          <p>No departments available</p>
+        </div>
+      </div>
+
+      <div th:if="${departmentsFound}">
+        <button type="submit" class="btn btn-primary">Add</button>
+      </div>
+      <div th:unless="${departmentsFound}">
+        <button type="submit" class="btn btn-primary" disabled>Add</button>
+      </div>
+    </fieldset>
+  </form>
+</div>
+
+<div th:if="${teachersFound}">
+  <div class="container mt-4">
+    <form action="#" th:action="@{/teachers/edit}" method="post" th:object="${teacher}">
+      <fieldset>
+        <legend>Edit Teacher</legend>
+        <div class="form-group">
+          <label for="teacherEdit">Teacher</label>
+          <select th:field="*{id}" class="form-control" id="teacherEdit" name="teacherEdit" required>
+            <option value=0>Select Teacher to edit</option>
+            <option th:each="teacher : ${list}" th:value="${teacher.id}" th:text="${teacher.name}"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="nameEdit">Teacher Name</label>
+          <input th:field="*{name}" type="text" class="form-control" id="nameEdit" name="name" placeholder="Teacher name">
+        </div>
+        <div class="form-group">
+          <label for="emailEdit">Teacher Email</label>
+          <input th:field="*{email}" type="email" class="form-control" id="emailEdit" name="email" placeholder="Teacher email">
+        </div>
+        <div class="form-group">
+          <label for="departmentEdit">Departments</label>
+          <div th:if="${departmentsFound}">
+            <select th:field="*{department}" class="form-control" id="departmentEdit" name="department">
+              <option value="">Select Department</option>
+              <option th:each="department : ${departmentList}" th:value="${department.id}" th:text="${department.name}"></option>
+            </select>
+          </div>
+          <div th:unless="${departmentsFound}" class="p-2">
+            <p>No departments available</p>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-info">Save</button>
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="container mt-4">
+    <form action="#" th:action="@{/teachers/delete}" method="post" th:object="${teacher}">
+      <fieldset>
+        <legend>Delete Teacher</legend>
+        <div class="form-group">
+          <label for="teacherDelete">Teacher</label>
+          <select th:field="*{id}" class="form-control" id="teacherDelete" name="teacherDelete" required>
+            <option value=0>Select Teacher to delete</option>
+            <option th:each="teacher : ${list}" th:value="${teacher.id}" th:text="${teacher.name}"></option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

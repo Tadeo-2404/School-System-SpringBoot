@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Student Page</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div>
+  <div class="bg-primary">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h1 class="text-white p-3">Student List</h1>
+        </div>
+        <div class="col-md-6">
+          <nav class="navbar navbar-expand-lg bg-primary">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/departments/page}">Departments</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/sections/page}">Sections</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/courses/page}">Courses</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/teachers/page}">Teachers</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${!studentsFound}" class="p-3">
+    <p>No students found, try creating one</p>
+  </div>
+  <div th:unless="${!studentsFound}">
+    <table class="table">
+      <thead>
+      <tr>
+        <th cope="col">ID</th>
+        <th cope="col">Name</th>
+        <th cope="col">Email</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="student : ${studentList}">
+        <td th:text="${student.id}"></td>
+        <td th:text="${student.name}"></td>
+        <td th:text="${student.email}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div th:if="${param.errorMessage}" class="alert alert-danger" role="alert">
+  <p th:text="${param.errorMessage}"></p>
+</div>
+<div class="container mt-4">
+  <form action="#" th:action="@{/students/save}" method="post" th:object="${student}">
+    <fieldset>
+      <legend>Add Student</legend>
+
+      <div class="form-group">
+        <label for="name">Student Name</label>
+        <input th:field="*{name}" type="text" class="form-control" id="name" name="name" placeholder="Student name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Student Email</label>
+        <input th:field="*{email}" type="email" class="form-control" id="email" name="email" placeholder="Student email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="sections">Sections</label>
+        <div th:if="${sectionsFound}">
+          <select th:field="*{sections}" class="form-control" id="sections" name="sections" multiple>
+            <option value="">Select Sections to enroll</option>
+            <option th:each="section : ${sectionList}" th:value="${section.id}" th:text="${section.name}"></option>
+          </select>
+        </div>
+        <div th:unless="${sectionsFound}" class="p-2">
+          <p>No sections available</p>
+        </div>
+      </div>
+
+      <div th:if="${sectionsFound}">
+        <button type="submit" class="btn btn-primary">Add</button>
+      </div>
+      <div th:unless="${sectionsFound}">
+        <button type="submit" class="btn btn-primary" disabled>Add</button>
+      </div>
+    </fieldset>
+  </form>
+</div>
+
+<div th:if="${studentsFound}">
+  <div class="container mt-4">
+    <form action="#" th:action="@{/students/edit}" method="post" th:object="${student}">
+      <fieldset>
+        <legend>Edit Student</legend>
+
+        <div class="form-group">
+          <label for="studentEdit">Student</label>
+          <select th:field="*{id}" class="form-control" id="studentEdit" name="studentEdit" required>
+            <option value=0>Select Student to Edit</option>
+            <option th:each="student : ${studentList}" th:value="${student.id}" th:text="${student.name}"></option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="nameEdit">Student Name</label>
+          <input th:field="*{name}" type="text" class="form-control" id="nameEdit" name="name" placeholder="Student name">
+        </div>
+
+        <div class="form-group">
+          <label for="emailEdit">Student Email</label>
+          <input th:field="*{email}" type="email" class="form-control" id="emailEdit" name="email" placeholder="Student email">
+        </div>
+
+        <div class="form-group">
+          <label for="sectionsEdit">Sections</label>
+          <div th:if="${sectionsFound}">
+            <select th:field="*{sections}" class="form-control" id="sectionsEdit" name="sectionsEdit" multiple>
+              <option value="">Select Sections to enroll</option>
+              <option th:each="section : ${sectionList}" th:value="${section.id}" th:text="${section.name}"></option>
+            </select>
+          </div>
+          <div th:unless="${sectionsFound}" class="p-2">
+            <p>No sections available</p>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-info">Save</button>
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="container mt-4">
+    <form action="#" th:action="@{/students/delete}" method="post" th:object="${student}">
+      <fieldset>
+        <legend>Delete Student</legend>
+        <div class="form-group">
+          <label for="studentDelete">Student</label>
+          <select th:field="*{id}" class="form-control" id="studentDelete" name="studentDelete" required>
+            <option value=0>Select Student to Delete</option>
+            <option th:each="student : ${studentList}" th:value="${student.id}" th:text="${student.name}"></option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
