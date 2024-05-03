@@ -8,6 +8,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
+/**
+ * This class represents a Teacher entity.
+ * It defines the properties and behavior of a teacher, including their name, email, department, and sections taught.
+ *
+ * @author Tadeo Alvarez
+ * @since 2024-05-02
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -14,6 +14,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * This class represents a @Service to manage data for CourseService
+ * It includes the implementation of the CourseService interface
+ * @see school.demo.service.CourseService
+ * @author Tadeo Alvarez
+ * @since  2024-05-02
+ * */
 @Service
 public class CourseServiceImplementation implements CourseService {
     private final CourseRepository courseRepository;

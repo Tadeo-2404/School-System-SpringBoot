@@ -6,9 +6,16 @@ import school.demo.model.Section;
 import school.demo.model.Student;
 import school.demo.service.StudentService;
 import school.demo.utils.StudentRequest;
-
 import java.util.List;
 
+/**
+ * This class represents a REST controller to manage students.
+ * It implements the functionalities defined in the StudentService interface.
+ *
+ * @see school.demo.service.StudentService
+ * @author Tadeo Alvarez
+ * @since 2024-05-02
+ */
 @RestController
 public class StudentController {
     private StudentService studentService;

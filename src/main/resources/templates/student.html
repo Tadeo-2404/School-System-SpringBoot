@@ -8,23 +8,31 @@
 <body>
 <div>
   <div class="bg-primary">
-    <h1 class="text-white p-3">Student List</h1>
-    <nav class="navbar navbar-expand-lg bg-primary">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link text-white" th:href="@{/departments/page}">Departments</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" th:href="@{/teachers/page}">Teachers</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" th:href="@{/courses/page}">Courses</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white" th:href="@{/sections/page}">Sections</a>
-        </li>
-      </ul>
-    </nav>
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h1 class="text-white p-3">Student List</h1>
+        </div>
+        <div class="col-md-6">
+          <nav class="navbar navbar-expand-lg bg-primary">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/departments/page}">Departments</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/sections/page}">Sections</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/courses/page}">Courses</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" th:href="@{/teachers/page}">Teachers</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div th:if="${!studentsFound}" class="p-3">
@@ -50,6 +58,9 @@
   </div>
 </div>
 
+<div th:if="${param.errorMessage}" class="alert alert-danger" role="alert">
+  <p th:text="${param.errorMessage}"></p>
+</div>
 <div class="container mt-4">
   <form action="#" th:action="@{/students/save}" method="post" th:object="${student}">
     <fieldset>
@@ -78,7 +89,12 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary">Add</button>
+      <div th:if="${sectionsFound}">
+        <button type="submit" class="btn btn-primary">Add</button>
+      </div>
+      <div th:unless="${sectionsFound}">
+        <button type="submit" class="btn btn-primary" disabled>Add</button>
+      </div>
     </fieldset>
   </form>
 </div>
@@ -99,12 +115,12 @@
 
         <div class="form-group">
           <label for="nameEdit">Student Name</label>
-          <input th:field="*{name}" type="text" class="form-control" id="nameEdit" name="name" placeholder="Student name" required>
+          <input th:field="*{name}" type="text" class="form-control" id="nameEdit" name="name" placeholder="Student name">
         </div>
 
         <div class="form-group">
           <label for="emailEdit">Student Email</label>
-          <input th:field="*{email}" type="email" class="form-control" id="emailEdit" name="email" placeholder="Student email" required>
+          <input th:field="*{email}" type="email" class="form-control" id="emailEdit" name="email" placeholder="Student email">
         </div>
 
         <div class="form-group">

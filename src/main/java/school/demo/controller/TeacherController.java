@@ -7,9 +7,16 @@ import school.demo.model.Section;
 import school.demo.model.Teacher;
 import school.demo.service.TeacherService;
 import school.demo.utils.TeacherRequest;
-
 import java.util.List;
 
+/**
+ * This class represents a REST controller to manage teachers.
+ * It implements the functionalities defined in the TeacherService interface.
+ *
+ * @see school.demo.service.TeacherService
+ * @author Tadeo Alvarez
+ * @since 2024-05-02
+ */
 @RestController
 public class TeacherController {
     private TeacherService teacherService;

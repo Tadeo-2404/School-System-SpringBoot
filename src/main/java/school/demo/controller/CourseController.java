@@ -7,6 +7,14 @@ import school.demo.model.Department;
 import school.demo.service.CourseService;
 import school.demo.utils.CourseRequest;
 
+/**
+ * This class represents a REST controller to manage courses.
+ * It implements the functionalities defined in the CourseService interface.
+ *
+ * @see school.demo.service.CourseService
+ * @author Tadeo Alvarez
+ * @since 2024-05-02
+ */
 @RestController
 public class CourseController {
     private final CourseService courseService;

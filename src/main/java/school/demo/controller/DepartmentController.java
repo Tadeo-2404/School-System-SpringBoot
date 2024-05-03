@@ -7,9 +7,14 @@ import school.demo.model.Department;
 import school.demo.service.DepartmentService;
 import school.demo.utils.DepartmentRequest;
 
-import java.util.List;
-import java.util.Map;
-
+/**
+ * This class represents a REST controller to manage departments.
+ * It implements the functionalities defined in the DepartmentService interface.
+ *
+ * @see school.demo.service.DepartmentService
+ * @author Tadeo Alvarez
+ * @since 2024-05-02
+ */
 @RestController
 public class DepartmentController {
     private final DepartmentService departmentService;

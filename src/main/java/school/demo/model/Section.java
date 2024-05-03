@@ -4,9 +4,15 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
+/**
+ * This class represents a Section entity.
+ * It defines the properties and behavior of a section, including its name, department, course, teacher, and enrolled students.
+ *
+ * @author Tadeo Alvarez
+ * @since 2024-05-02
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,7 +39,7 @@ public class Section {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToMany(mappedBy = "sections")
+    @ManyToMany(mappedBy = "sections", cascade = CascadeType.ALL)
     private List<Student> students;
 
     public Section(String name, Department department, Course course, Teacher teacher, List<Student> students) {

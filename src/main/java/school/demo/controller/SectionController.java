@@ -1,15 +1,19 @@
 package school.demo.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import school.demo.model.*;
 import school.demo.service.SectionService;
 import school.demo.utils.SectionRequest;
 import school.demo.utils.SectionRequestEdit;
 
-import java.util.List;
-
+/**
+ * This class represents a REST controller to manage sections.
+ * It implements the functionalities defined in the SectionService interface.
+ *
+ * @see school.demo.service.SectionService
+ * @author Tadeo Alvarez
+ * @since 2024-05-02
+ */
 @RestController
 public class SectionController {
     private final SectionService sectionService;

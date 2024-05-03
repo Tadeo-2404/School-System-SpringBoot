@@ -8,9 +8,15 @@ import school.demo.model.Department;
 import school.demo.repository.CourseRepository;
 import school.demo.repository.DepartmentRepository;
 import school.demo.service.DepartmentService;
-
 import java.util.*;
 
+/**
+ * This class represents a @Service to manage data for DepartmentService
+ * It includes the implementation of the DepartmentService interface
+ * @see school.demo.service.DepartmentService
+ * @author Tadeo Alvarez
+ * @since  2024-05-02
+ * */
 @Service
 public class DepartmentServiceImplementation implements DepartmentService {
     private final DepartmentRepository departmentRepository;
@@ -147,6 +153,14 @@ public class DepartmentServiceImplementation implements DepartmentService {
                 data.put("statusCode", HttpStatus.BAD_REQUEST.value());
                 data.put("message", "Missing Name attribute");
                 return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+            }
+
+            Optional<Department> existDepartmentName = departmentRepository.findByName(name);
+            if(existDepartmentName.isPresent()) {
+                data.put("statusMessage", HttpStatus.NOT_FOUND);
+                data.put("statusCode", HttpStatus.NOT_FOUND.value());
+                data.put("message", "Department with name '" + name + "' already exists");
+                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
             }
 
             boolean existDepartment = departmentRepository.existsById(id);

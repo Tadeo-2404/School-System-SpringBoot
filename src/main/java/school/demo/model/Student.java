@@ -4,9 +4,15 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
+/**
+ * This class represents a Student entity.
+ * It defines the properties and behavior of a student, including their name, email, and enrolled sections.
+ *
+ * @author Tadeo Alvarez
+ * @since 2024-05-02
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

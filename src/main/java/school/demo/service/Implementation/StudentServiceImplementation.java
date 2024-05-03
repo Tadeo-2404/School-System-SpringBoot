@@ -3,16 +3,20 @@ package school.demo.service.Implementation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import school.demo.model.Course;
-import school.demo.model.Department;
 import school.demo.model.Section;
 import school.demo.model.Student;
 import school.demo.repository.SectionRepository;
 import school.demo.repository.StudentRepository;
 import school.demo.service.StudentService;
-
 import java.util.*;
 
+/**
+ * This class represents a @Service to manage data for StudentService
+ * It includes the implementation of the StudentService interface
+ * @see school.demo.service.StudentService
+ * @author Tadeo Alvarez
+ * @since  2024-05-02
+ * */
 @Service
 public class StudentServiceImplementation implements StudentService {
     private final StudentRepository studentRepository;

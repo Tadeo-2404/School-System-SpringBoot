@@ -5,6 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * This class represents a Course entity.
+ * It defines the properties and behavior of a course, including its name and the department it belongs to.
+ *
+ * @author Tadeo Alvarez
+ * @since 2024-05-02
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

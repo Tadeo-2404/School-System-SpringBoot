@@ -12,6 +12,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * This class represents a @Service to manage data for SectionService
+ * It includes the implementation of the SectionService interface
+ * @see school.demo.service.SectionService
+ * @author Tadeo Alvarez
+ * @since  2024-05-02
+ * */
 @Service
 public class SectionServiceImplementation implements SectionService {
     private final SectionRepository sectionRepository;

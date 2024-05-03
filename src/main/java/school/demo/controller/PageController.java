@@ -11,10 +11,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import school.demo.model.*;
 import school.demo.service.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents a controller for handling page requests.
+ * It provides access to services related to departments, students, teachers, courses, and sections.
+ *
+ * @see /main/resources/templates
+ * @author Tadeo Alvarez
+ * @since 2024-05-02
+ */
 @Controller
 public class PageController {
     private final DepartmentService departmentService;
@@ -51,21 +61,48 @@ public class PageController {
 
     @PostMapping("/departments/save")
     public String saveDepartment(@RequestParam String name) {
-        departmentService.createDepartment(name, new ArrayList<>());
+        ResponseEntity<Object> response = departmentService.createDepartment(name, new ArrayList<>());
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/departments/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         // Redirect to the department page
         return "redirect:/departments/page";
     }
 
     @PostMapping("/departments/edit")
     public String editDepartment(@ModelAttribute("department") Department department) {
-        departmentService.editDepartment(department.getId(), department.getName(), new ArrayList<>());
+        ResponseEntity<Object> response = departmentService.editDepartment(department.getId(), department.getName(), new ArrayList<>());
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/departments/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         // Redirect to the department page
         return "redirect:/departments/page";
     }
 
     @PostMapping("/departments/delete")
     public String deleteDepartment(@ModelAttribute("department") Department department) {
-        departmentService.deleteDepartment(department.getId());
+        ResponseEntity<Object> response = departmentService.deleteDepartment(department.getId());
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/departments/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         // Redirect to the department page
         return "redirect:/departments/page";
     }
@@ -101,9 +138,17 @@ public class PageController {
 
     @PostMapping("/students/save")
     public String saveStudent(@ModelAttribute("student") Student student) {
-        List<Section> sectionList = !student.getSections().isEmpty() ? student.getSections() : null;
+        List<Section> sectionList = student.getSections() != null ? student.getSections() : null;
         ResponseEntity<Object> response = studentService.createStudent(student.getName(), student.getEmail(), sectionList);
-        System.out.println(response);
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/students/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         // Redirect to the student page
         return "redirect:/students/page";
     }
@@ -113,7 +158,15 @@ public class PageController {
         String name = student.getName() != null ? student.getName() : null;
         String email = student.getEmail() != null ? student.getEmail() : null;
         ResponseEntity<Object> response = studentService.editStudent(student.getId(), name, email, null);
-        System.out.println(response);
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/students/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         // Redirect to the student page
         return "redirect:/students/page";
     }
@@ -121,8 +174,15 @@ public class PageController {
     @PostMapping("/students/delete")
     public String deleteStudent(@ModelAttribute("student") Student student) {
         ResponseEntity<Object> response = studentService.deleteStudent(student.getId());
-        System.out.println(response);
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
 
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/students/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         // Redirect to the department page
         return "redirect:/students/page";
     }
@@ -161,7 +221,15 @@ public class PageController {
     @PostMapping("/teachers/save")
     public String saveTeacher(@ModelAttribute("teacher") Teacher teacher) {
         ResponseEntity<Object> response = teacherService.createTeacher(teacher.getName(), teacher.getEmail(), teacher.getDepartment(), null);
-        // Redirect to the department page
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/teachers/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         return "redirect:/teachers/page";
     }
 
@@ -171,17 +239,32 @@ public class PageController {
         String email = teacher.getEmail() != null ? teacher.getEmail() : null;
         Department department = teacher.getDepartment() != null ? teacher.getDepartment() : null;
         ResponseEntity<Object> response = teacherService.editTeacher(teacher.getId(), name, email, department,null);
-        System.out.println("response edit: " + response);
-        // Redirect to the student page
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/teachers/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
+        // Redirect to the teacher page
         return "redirect:/teachers/page";
     }
 
     @PostMapping("/teachers/delete")
     public String deleteTeacher(@ModelAttribute("teacher") Teacher teacher) {
         ResponseEntity<Object> response = teacherService.deleteTeacher(teacher.getId());
-        System.out.println(response);
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
 
-        // Redirect to the department page
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/teachers/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
+        // Redirect to the teacher page
         return "redirect:/teachers/page";
     }
 
@@ -218,6 +301,15 @@ public class PageController {
     @PostMapping("/courses/save")
     public String saveCourse(@ModelAttribute("course") Course course) {
         ResponseEntity<Object> response = courseService.createCourse(course.getName(), course.getDepartment());
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/courses/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         // Redirect to the course page
         return "redirect:/courses/page";
     }
@@ -227,6 +319,15 @@ public class PageController {
         String name = course.getName() != null ? course.getName() : null;
         Department department = course.getDepartment() != null ? course.getDepartment() : null;
         ResponseEntity<Object> response = courseService.editCourse(course.getId(), name, department);
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/courses/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         // Redirect to the course page
         return "redirect:/courses/page";
     }
@@ -234,7 +335,15 @@ public class PageController {
     @PostMapping("/courses/delete")
     public String deleteCourse(@ModelAttribute("courses") Course course) {
         ResponseEntity<Object> response = courseService.deleteCourse(course.getId());
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
 
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/courses/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         // Redirect to the course page
         return "redirect:/courses/page";
     }
@@ -293,12 +402,21 @@ public class PageController {
 
     @PostMapping("/sections/save")
     public String saveSection(@ModelAttribute("section") Section section) {
-        String name = section.getName();
-        Department department = section.getDepartment();
-        Teacher teacher = section.getTeacher();
-        Course course = section.getCourse();
-        ResponseEntity<Object> response = sectionService.createSection(name, department.getId(), teacher.getId(), course.getId());
-        // Redirect to the course page
+        String name = section.getName() != null ? section.getName() : null;
+        Integer departmentId = section.getDepartment() != null ? section.getDepartment().getId() : null;
+        Integer teacherId = section.getTeacher() != null ? section.getTeacher().getId() : null;
+        Integer sectionId = section.getCourse() != null ? section.getCourse().getId() : null;
+
+        ResponseEntity<Object> response = sectionService.createSection(name, departmentId, teacherId, sectionId);
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/sections/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         return "redirect:/sections/page";
     }
 
@@ -309,15 +427,30 @@ public class PageController {
         Integer teacherId = section.getTeacher().getId() != 0 ? section.getTeacher().getId() : 0;
         Integer courseId = section.getCourse().getId() != 0 ? section.getCourse().getId() : 0;
         ResponseEntity<Object> response = sectionService.editSection(section.getId(), name, departmentId, courseId, teacherId);
-        // Redirect to the course page
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
+
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/sections/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         return "redirect:/sections/page";
     }
 
     @PostMapping("/sections/delete")
     public String deleteSections(@ModelAttribute("sections") Section section) {
         ResponseEntity<Object> response = sectionService.deleteSection(section.getId());
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        Object message = responseBody.get("message");
+        Object statusCode = responseBody.get("statusCode");
 
-        // Redirect to the course page
+        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
+            String errorMessage = message.toString();
+            // Append the error message as a query parameter in the redirect URL
+            return "redirect:/sections/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        }
         return "redirect:/sections/page";
     }
 }

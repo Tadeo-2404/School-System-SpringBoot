@@ -11,9 +11,15 @@ import school.demo.repository.DepartmentRepository;
 import school.demo.repository.SectionRepository;
 import school.demo.repository.TeacherRepository;
 import school.demo.service.TeacherService;
-
 import java.util.*;
 
+/**
+ * This class represents a @Service to manage data for TeacherService
+ * It includes the implementation of the TeacherService interface
+ * @see school.demo.service.TeacherService
+ * @author Tadeo Alvarez
+ * @since  2024-05-02
+ * */
 @Service
 public class TeacherServiceImplementation implements TeacherService {
     private final TeacherRepository teacherRepository;
