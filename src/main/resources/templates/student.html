@@ -27,10 +27,10 @@
     </nav>
   </div>
 
-  <div th:if="${noStudentsFound}" class="p-3">
+  <div th:if="${!studentsFound}" class="p-3">
     <p>No students found, try creating one</p>
   </div>
-  <div th:unless="${noStudentsFound}">
+  <div th:unless="${!studentsFound}">
     <table class="table">
       <thead>
       <tr>
@@ -40,7 +40,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="student : ${list}">
+      <tr th:each="student : ${studentList}">
         <td th:text="${student.id}"></td>
         <td th:text="${student.name}"></td>
         <td th:text="${student.email}"></td>
@@ -54,37 +54,73 @@
   <form action="#" th:action="@{/students/save}" method="post" th:object="${student}">
     <fieldset>
       <legend>Add Student</legend>
+
       <div class="form-group">
         <label for="name">Student Name</label>
         <input th:field="*{name}" type="text" class="form-control" id="name" name="name" placeholder="Student name" required>
       </div>
+
       <div class="form-group">
         <label for="email">Student Email</label>
         <input th:field="*{email}" type="email" class="form-control" id="email" name="email" placeholder="Student email" required>
       </div>
-      <button type="submit" class="btn btn-primary">Save</button>
+
+      <div class="form-group">
+        <label for="sections">Sections</label>
+        <div th:if="${sectionsFound}">
+          <select th:field="*{sections}" class="form-control" id="sections" name="sections" multiple>
+            <option value="">Select Sections to enroll</option>
+            <option th:each="section : ${sectionList}" th:value="${section.id}" th:text="${section.name}"></option>
+          </select>
+        </div>
+        <div th:unless="${sectionsFound}" class="p-2">
+          <p>No sections available</p>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Add</button>
     </fieldset>
   </form>
 </div>
 
-<div th:if="${!noStudentsFound}">
+<div th:if="${studentsFound}">
   <div class="container mt-4">
     <form action="#" th:action="@{/students/edit}" method="post" th:object="${student}">
       <fieldset>
         <legend>Edit Student</legend>
+
         <div class="form-group">
-          <label for="id">Student Id</label>
-          <input th:field="*{id}" type="number" min="1" class="form-control" id="id" name="id" placeholder="Student id" required>
+          <label for="studentEdit">Student</label>
+          <select th:field="*{id}" class="form-control" id="studentEdit" name="studentEdit" required>
+            <option value=0>Select Student to Edit</option>
+            <option th:each="student : ${studentList}" th:value="${student.id}" th:text="${student.name}"></option>
+          </select>
         </div>
+
         <div class="form-group">
           <label for="nameEdit">Student Name</label>
           <input th:field="*{name}" type="text" class="form-control" id="nameEdit" name="name" placeholder="Student name" required>
         </div>
+
         <div class="form-group">
           <label for="emailEdit">Student Email</label>
           <input th:field="*{email}" type="email" class="form-control" id="emailEdit" name="email" placeholder="Student email" required>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+
+        <div class="form-group">
+          <label for="sectionsEdit">Sections</label>
+          <div th:if="${sectionsFound}">
+            <select th:field="*{sections}" class="form-control" id="sectionsEdit" name="sectionsEdit" multiple>
+              <option value="">Select Sections to enroll</option>
+              <option th:each="section : ${sectionList}" th:value="${section.id}" th:text="${section.name}"></option>
+            </select>
+          </div>
+          <div th:unless="${sectionsFound}" class="p-2">
+            <p>No sections available</p>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-info">Save</button>
       </fieldset>
     </form>
   </div>
@@ -94,15 +130,17 @@
       <fieldset>
         <legend>Delete Student</legend>
         <div class="form-group">
-          <label for="idDelete">Student Id</label>
-          <input th:field="*{id}" type="number" min="1" class="form-control" id="idDelete" name="id" placeholder="Student id" required>
+          <label for="studentDelete">Student</label>
+          <select th:field="*{id}" class="form-control" id="studentDelete" name="studentDelete" required>
+            <option value=0>Select Student to Delete</option>
+            <option th:each="student : ${studentList}" th:value="${student.id}" th:text="${student.name}"></option>
+          </select>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-danger">Delete</button>
       </fieldset>
     </form>
   </div>
 </div>
-
 
 <!-- Bootstrap JS and jQuery -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

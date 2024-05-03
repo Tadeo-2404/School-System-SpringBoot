@@ -41,4 +41,12 @@ public class Department {
         this.name = name;
         this.courses = courses;
     }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -34,4 +34,13 @@ public class Student {
         this.email = email;
         this.sections = sections;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

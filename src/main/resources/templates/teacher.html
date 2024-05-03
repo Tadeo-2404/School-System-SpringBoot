@@ -76,7 +76,7 @@
           <p>No departments available</p>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary">Save</button>
+      <button type="submit" class="btn btn-primary">Add</button>
     </fieldset>
   </form>
 </div>
@@ -89,7 +89,7 @@
         <div class="form-group">
           <label for="teacherEdit">Teacher</label>
           <select th:field="*{id}" class="form-control" id="teacherEdit" name="teacherEdit" required>
-            <option value=0>Select Teacher</option>
+            <option value=0>Select Teacher to edit</option>
             <option th:each="teacher : ${list}" th:value="${teacher.id}" th:text="${teacher.name}"></option>
           </select>
         </div>
@@ -113,7 +113,7 @@
             <p>No departments available</p>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-info">Save</button>
       </fieldset>
     </form>
   </div>
@@ -125,11 +125,11 @@
         <div class="form-group">
           <label for="teacherDelete">Teacher</label>
           <select th:field="*{id}" class="form-control" id="teacherDelete" name="teacherDelete" required>
-            <option value=0>Select Teacher</option>
+            <option value=0>Select Teacher to delete</option>
             <option th:each="teacher : ${list}" th:value="${teacher.id}" th:text="${teacher.name}"></option>
           </select>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-danger">Delete</button>
       </fieldset>
     </form>
   </div>

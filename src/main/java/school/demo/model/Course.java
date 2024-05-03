@@ -31,4 +31,12 @@ public class Course {
     public Course(int courseId) {
         this.id = courseId;
     }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

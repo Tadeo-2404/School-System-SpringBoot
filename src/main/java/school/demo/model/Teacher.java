@@ -42,4 +42,13 @@ public class Teacher {
     public Teacher(int teacherId) {
         this.id = teacherId;
     }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

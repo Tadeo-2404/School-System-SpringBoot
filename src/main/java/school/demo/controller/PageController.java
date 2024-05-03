@@ -31,6 +31,7 @@ public class PageController {
         this.sectionService = sectionService;
     }
 
+    //DEPARTMENTS
     @GetMapping("/departments/page")
     public String department(Model model) {
         ResponseEntity<Object> responseEntity = departmentService.getDepartments();
@@ -73,14 +74,25 @@ public class PageController {
     @GetMapping("/students/page")
     public String student(Model model) {
         ResponseEntity<Object> responseEntity = studentService.getStudents();
+        ResponseEntity<Object> responseEntitySections = sectionService.getSections();
 
         if(responseEntity.getStatusCode() == HttpStatus.NOT_FOUND) {
-            model.addAttribute("noStudentsFound", true);
+            model.addAttribute("studentsFound", false);
         } else {
             Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
             List<Department> studentList = (List<Department>) responseBody.get("data");
-            model.addAttribute("list", studentList);
-            model.addAttribute("noStudentsFound", false);
+            model.addAttribute("studentList", studentList);
+            model.addAttribute("studentsFound", true);
+        }
+
+        if(responseEntitySections.getStatusCode() == HttpStatus.NOT_FOUND) {
+            model.addAttribute("sectionsFound", false);
+        } else {
+            model.addAttribute("sectionsFound", true);
+            //teacher list
+            Map<String, Object> responseBodySection = (Map<String, Object>) responseEntitySections.getBody();
+            List<Section> sectionList = (List<Section>) responseBodySection.get("data");
+            model.addAttribute("sectionList", sectionList);
         }
 
         model.addAttribute("student", new Student());
@@ -89,9 +101,10 @@ public class PageController {
 
     @PostMapping("/students/save")
     public String saveStudent(@ModelAttribute("student") Student student) {
-        ResponseEntity<Object> response = studentService.createStudent(student.getName(), student.getEmail(), null);
+        List<Section> sectionList = !student.getSections().isEmpty() ? student.getSections() : null;
+        ResponseEntity<Object> response = studentService.createStudent(student.getName(), student.getEmail(), sectionList);
         System.out.println(response);
-        // Redirect to the department page
+        // Redirect to the student page
         return "redirect:/students/page";
     }
 
