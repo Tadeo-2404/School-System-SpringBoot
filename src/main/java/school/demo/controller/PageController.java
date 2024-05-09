@@ -1,5 +1,6 @@
 package school.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,7 @@ public class PageController {
     private final CourseService courseService;
     private final SectionService sectionService;
 
+    @Autowired
     public PageController(DepartmentService departmentService, StudentService studentService, TeacherService teacherService, CourseService courseService, SectionService sectionService) {
         this.departmentService = departmentService;
         this.studentService = studentService;

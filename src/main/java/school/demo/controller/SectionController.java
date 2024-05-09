@@ -1,5 +1,6 @@
 package school.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import school.demo.service.SectionService;
@@ -18,6 +19,7 @@ import school.demo.utils.SectionRequestEdit;
 public class SectionController {
     private final SectionService sectionService;
 
+    @Autowired
     public SectionController(SectionService sectionService) {
         this.sectionService = sectionService;
     }

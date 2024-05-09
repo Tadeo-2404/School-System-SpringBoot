@@ -1,5 +1,6 @@
 package school.demo.service.Implementation;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class DepartmentServiceImplementation implements DepartmentService {
     private final DepartmentRepository departmentRepository;
     private final CourseRepository courseRepository;
 
+    @Autowired
     public DepartmentServiceImplementation(DepartmentRepository departmentRepository, CourseRepository courseRepository) {
         this.departmentRepository = departmentRepository;
         this.courseRepository = courseRepository;

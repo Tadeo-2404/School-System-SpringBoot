@@ -1,5 +1,6 @@
 package school.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import school.demo.model.Course;
@@ -19,6 +20,7 @@ import school.demo.utils.CourseRequest;
 public class CourseController {
     private final CourseService courseService;
 
+    @Autowired
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }

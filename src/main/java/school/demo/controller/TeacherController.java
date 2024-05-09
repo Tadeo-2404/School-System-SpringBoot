@@ -1,5 +1,6 @@
 package school.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import school.demo.model.Department;
@@ -21,6 +22,7 @@ import java.util.List;
 public class TeacherController {
     private TeacherService teacherService;
 
+    @Autowired
     public TeacherController(TeacherService teacherService) {
         this.teacherService = teacherService;
     }
