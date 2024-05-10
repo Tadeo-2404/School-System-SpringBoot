@@ -37,10 +37,6 @@ public class Teacher {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "teacher", cascade = CascadeType.ALL)
-    @JsonIdentityReference(alwaysAsId = true)
-    private List<Section> sections;
-
     public Teacher(String name, String email) {
         this.name = name;
         this.email = email;
@@ -48,14 +44,5 @@ public class Teacher {
 
     public Teacher(int teacherId) {
         this.id = teacherId;
-    }
-
-    @Override
-    public String toString() {
-        return "Teacher{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
     }
 }

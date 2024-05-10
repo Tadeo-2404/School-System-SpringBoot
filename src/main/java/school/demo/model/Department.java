@@ -30,28 +30,11 @@ public class Department {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.ALL)
-    @JsonIdentityReference(alwaysAsId = true)
-    private List<Course> courses;
-
     public Department(String name) {
         this.name = name;
     }
 
     public Department(int departmentId) {
         this.id = departmentId;
-    }
-
-    public Department(String name, List<Course> courses) {
-        this.name = name;
-        this.courses = courses;
-    }
-
-    @Override
-    public String toString() {
-        return "Department{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
     }
 }

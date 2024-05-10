@@ -53,7 +53,7 @@ public interface TeacherService {
      * @param sections   the list of sections taught by the teacher
      * @return ResponseEntity<Object> containing the created teacher
      */
-    ResponseEntity<Object> createTeacher(String name, String email, Department department, List<Section> sections);
+    ResponseEntity<Object> createTeacher(String name, String email, Department department);
     /**
      * Edits an existing teacher.
      * @param id         the ID of the teacher to edit
@@ -64,7 +64,7 @@ public interface TeacherService {
      * @return ResponseEntity<Object> containing the updated teacher if successful,
      *         or a 404 response if the teacher does not exist
      */
-    ResponseEntity<Object> editTeacher(int id, String name, String email, Department department, List<Section> sections);
+    ResponseEntity<Object> editTeacher(int id, String name, String email, Department department);
     /**
      * Deletes a teacher by their ID.
      * @param id the ID of the teacher to delete

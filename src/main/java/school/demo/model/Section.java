@@ -39,17 +39,6 @@ public class Section {
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 
-    @ManyToMany(mappedBy = "sections", cascade = CascadeType.ALL)
-    private List<Student> students;
-
-    public Section(String name, Department department, Course course, Teacher teacher, List<Student> students) {
-        this.name = name;
-        this.department = department;
-        this.course = course;
-        this.teacher = teacher;
-        this.students = students;
-    }
-
     public Section(String name, Department department, Course course, Teacher teacher) {
         this.name = name;
         this.department = department;

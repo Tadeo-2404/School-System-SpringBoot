@@ -1,5 +1,6 @@
 package school.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import school.demo.model.Department;
@@ -21,6 +22,7 @@ import java.util.List;
 public class TeacherController {
     private TeacherService teacherService;
 
+    @Autowired
     public TeacherController(TeacherService teacherService) {
         this.teacherService = teacherService;
     }
@@ -53,16 +55,14 @@ public class TeacherController {
     public ResponseEntity<Object> createTeacher(@RequestBody TeacherRequest teacherRequest) {
         Teacher teacher = teacherRequest.teacher();
         Department department = teacherRequest.department();
-        List<Section> sections = teacherRequest.sections();
-        return teacherService.createTeacher(teacher.getName(), teacher.getEmail(), department, sections);
+        return teacherService.createTeacher(teacher.getName(), teacher.getEmail(), department);
     }
 
     @PutMapping("/teachers")
     public ResponseEntity<Object> editTeacher(@RequestBody TeacherRequest teacherRequest) {
         Teacher teacher = teacherRequest.teacher();
         Department department = teacherRequest.department();
-        List<Section> sections = teacherRequest.sections();
-        return teacherService.editTeacher(teacher.getId(), teacher.getName(), teacher.getEmail(), department, sections);
+        return teacherService.editTeacher(teacher.getId(), teacher.getName(), teacher.getEmail(), department);
     }
 
     @DeleteMapping("/teachers")

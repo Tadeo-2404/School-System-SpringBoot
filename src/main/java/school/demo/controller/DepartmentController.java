@@ -1,5 +1,6 @@
 package school.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import school.demo.utils.DepartmentRequest;
 public class DepartmentController {
     private final DepartmentService departmentService;
 
+    @Autowired
     public DepartmentController(DepartmentService departmentService) {
         this.departmentService = departmentService;
     }
@@ -40,12 +42,12 @@ public class DepartmentController {
 
     @PostMapping("/departments")
     public ResponseEntity<Object> createDepartment(@RequestBody DepartmentRequest departmentRequest) {
-        return departmentService.createDepartment(departmentRequest.department().getName(), departmentRequest.courses());
+        return departmentService.createDepartment(departmentRequest.department().getName());
     }
 
     @PutMapping("/departments")
     public ResponseEntity<Object> editDepartment(@RequestBody DepartmentRequest departmentRequest) {
-        return departmentService.editDepartment(departmentRequest.department().getId() ,departmentRequest.department().getName(), departmentRequest.courses());
+        return departmentService.editDepartment(departmentRequest.department().getId() ,departmentRequest.department().getName());
     }
 
     @DeleteMapping("/departments")

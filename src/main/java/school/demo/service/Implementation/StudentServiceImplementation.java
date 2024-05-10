@@ -1,5 +1,6 @@
 package school.demo.service.Implementation;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class StudentServiceImplementation implements StudentService {
     private final StudentRepository studentRepository;
     private final SectionRepository sectionRepository;
 
+    @Autowired
     public StudentServiceImplementation(StudentRepository studentRepository, SectionRepository sectionRepository) {
         this.studentRepository = studentRepository;
         this.sectionRepository = sectionRepository;
