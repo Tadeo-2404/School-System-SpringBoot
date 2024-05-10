@@ -12,5 +12,5 @@ import java.util.List;
  * @author Tadeo Alvarez
  * @since 2024-05-02
  */
-public record TeacherRequest(Teacher teacher, Department department,List<Section> sections)
+public record TeacherRequest(Teacher teacher, Department department)
 {}

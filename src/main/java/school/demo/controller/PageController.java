@@ -63,7 +63,7 @@ public class PageController {
 
     @PostMapping("/departments/save")
     public String saveDepartment(@RequestParam String name) {
-        ResponseEntity<Object> response = departmentService.createDepartment(name, new ArrayList<>());
+        ResponseEntity<Object> response = departmentService.createDepartment(name);
         Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
         Object message = responseBody.get("message");
         Object statusCode = responseBody.get("statusCode");
@@ -79,7 +79,7 @@ public class PageController {
 
     @PostMapping("/departments/edit")
     public String editDepartment(@ModelAttribute("department") Department department) {
-        ResponseEntity<Object> response = departmentService.editDepartment(department.getId(), department.getName(), new ArrayList<>());
+        ResponseEntity<Object> response = departmentService.editDepartment(department.getId(), department.getName());
         Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
         Object message = responseBody.get("message");
         Object statusCode = responseBody.get("statusCode");
@@ -222,7 +222,7 @@ public class PageController {
 
     @PostMapping("/teachers/save")
     public String saveTeacher(@ModelAttribute("teacher") Teacher teacher) {
-        ResponseEntity<Object> response = teacherService.createTeacher(teacher.getName(), teacher.getEmail(), teacher.getDepartment(), null);
+        ResponseEntity<Object> response = teacherService.createTeacher(teacher.getName(), teacher.getEmail(), teacher.getDepartment());
         Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
         Object message = responseBody.get("message");
         Object statusCode = responseBody.get("statusCode");
@@ -240,7 +240,7 @@ public class PageController {
         String name = teacher.getName() != null ? teacher.getName() : null;
         String email = teacher.getEmail() != null ? teacher.getEmail() : null;
         Department department = teacher.getDepartment() != null ? teacher.getDepartment() : null;
-        ResponseEntity<Object> response = teacherService.editTeacher(teacher.getId(), name, email, department,null);
+        ResponseEntity<Object> response = teacherService.editTeacher(teacher.getId(), name, email, department);
         Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
         Object message = responseBody.get("message");
         Object statusCode = responseBody.get("statusCode");

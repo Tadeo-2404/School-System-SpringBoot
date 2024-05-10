@@ -55,16 +55,14 @@ public class TeacherController {
     public ResponseEntity<Object> createTeacher(@RequestBody TeacherRequest teacherRequest) {
         Teacher teacher = teacherRequest.teacher();
         Department department = teacherRequest.department();
-        List<Section> sections = teacherRequest.sections();
-        return teacherService.createTeacher(teacher.getName(), teacher.getEmail(), department, sections);
+        return teacherService.createTeacher(teacher.getName(), teacher.getEmail(), department);
     }
 
     @PutMapping("/teachers")
     public ResponseEntity<Object> editTeacher(@RequestBody TeacherRequest teacherRequest) {
         Teacher teacher = teacherRequest.teacher();
         Department department = teacherRequest.department();
-        List<Section> sections = teacherRequest.sections();
-        return teacherService.editTeacher(teacher.getId(), teacher.getName(), teacher.getEmail(), department, sections);
+        return teacherService.editTeacher(teacher.getId(), teacher.getName(), teacher.getEmail(), department);
     }
 
     @DeleteMapping("/teachers")

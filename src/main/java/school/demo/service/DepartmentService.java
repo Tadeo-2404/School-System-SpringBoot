@@ -36,7 +36,7 @@ public interface DepartmentService {
      * @param courses the list of courses associated with the department
      * @return ResponseEntity<Object> containing the created department
      */
-    ResponseEntity<Object> createDepartment(String name, List<Course> courses);
+    ResponseEntity<Object> createDepartment(String name);
     /**
      * Edits an existing department.
      * @param id      the unique identifier of the department to edit
@@ -45,7 +45,7 @@ public interface DepartmentService {
      * @return ResponseEntity<Object> containing the updated department if successful,
      *         or a 404 response if the department does not exist
      */
-    ResponseEntity<Object> editDepartment(int id, String name, List<Course> courses);
+    ResponseEntity<Object> editDepartment(int id, String name);
     /**
      * Deletes a department by its ID.
      * @param id the unique identifier of the department to delete

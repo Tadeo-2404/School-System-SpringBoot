@@ -42,12 +42,12 @@ public class DepartmentController {
 
     @PostMapping("/departments")
     public ResponseEntity<Object> createDepartment(@RequestBody DepartmentRequest departmentRequest) {
-        return departmentService.createDepartment(departmentRequest.department().getName(), departmentRequest.courses());
+        return departmentService.createDepartment(departmentRequest.department().getName());
     }
 
     @PutMapping("/departments")
     public ResponseEntity<Object> editDepartment(@RequestBody DepartmentRequest departmentRequest) {
-        return departmentService.editDepartment(departmentRequest.department().getId() ,departmentRequest.department().getName(), departmentRequest.courses());
+        return departmentService.editDepartment(departmentRequest.department().getId() ,departmentRequest.department().getName());
     }
 
     @DeleteMapping("/departments")

@@ -21,12 +21,10 @@ import java.util.*;
 @Service
 public class DepartmentServiceImplementation implements DepartmentService {
     private final DepartmentRepository departmentRepository;
-    private final CourseRepository courseRepository;
 
     @Autowired
-    public DepartmentServiceImplementation(DepartmentRepository departmentRepository, CourseRepository courseRepository) {
+    public DepartmentServiceImplementation(DepartmentRepository departmentRepository) {
         this.departmentRepository = departmentRepository;
-        this.courseRepository = courseRepository;
     }
 
     public ResponseEntity<Object> getDepartments() {
@@ -95,7 +93,7 @@ public class DepartmentServiceImplementation implements DepartmentService {
         }
     }
 
-    public ResponseEntity<Object> createDepartment(String name, List<Course> courses) {
+    public ResponseEntity<Object> createDepartment(String name) {
         Map<String, Object> data = new HashMap<>();
 
         try {
@@ -115,16 +113,6 @@ public class DepartmentServiceImplementation implements DepartmentService {
             }
 
             Department departmentToSave = new Department(name);
-            List<Course> list = new ArrayList<>();
-            if(courses != null) {
-                // Associate courses with the department
-                for (Course course : courses) {
-                    Course c = new Course(course.getName(), departmentToSave);
-                    list.add(c);
-                }
-            }
-
-            departmentToSave.setCourses(list);
             Department departmentSaved = departmentRepository.save(departmentToSave);
             data.put("data", departmentSaved);
             data.put("statusMessage", HttpStatus.CREATED);
@@ -138,7 +126,7 @@ public class DepartmentServiceImplementation implements DepartmentService {
         }
     }
 
-    public ResponseEntity<Object> editDepartment(int id, String name, List<Course> courses) {
+    public ResponseEntity<Object> editDepartment(int id, String name) {
         Map<String, Object> data = new HashMap<>();
         Department departmentToSave = new Department();
 
@@ -171,18 +159,6 @@ public class DepartmentServiceImplementation implements DepartmentService {
                 data.put("statusCode", HttpStatus.NOT_FOUND.value());
                 data.put("message", "Department with ID '" + id + "' not found");
                 return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
-            }
-
-            List<Course> list = new ArrayList<>();
-            //store the courses
-            if(courses != null) {
-                if(courses.size() > 0) {
-                    // Associate courses with the department
-                    for (Course course : courses) {
-                        list.add(course);
-                    }
-                    departmentToSave.setCourses(list);
-                }
             }
 
             departmentToSave.setId(id);

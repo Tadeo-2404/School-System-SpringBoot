@@ -147,7 +147,7 @@ public class TeacherServiceImplementation implements TeacherService {
         }
     }
 
-    public ResponseEntity<Object> createTeacher(String name, String email, Department department, List<Section> sections) {
+    public ResponseEntity<Object> createTeacher(String name, String email, Department department) {
         Map<String, Object> data = new HashMap<>();
 
         try {
@@ -156,15 +156,6 @@ public class TeacherServiceImplementation implements TeacherService {
                     data.put("statusMessage", HttpStatus.BAD_REQUEST);
                     data.put("statusCode", HttpStatus.BAD_REQUEST.value());
                     data.put("message", "Missing departmentId attribute");
-                    return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
-                }
-            }
-
-            if (sections != null) {
-                if (sections.isEmpty()) {
-                    data.put("message", "Missing student sections list");
-                    data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                    data.put("statusCode", HttpStatus.BAD_REQUEST.value());
                     return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
                 }
             }
@@ -186,20 +177,10 @@ public class TeacherServiceImplementation implements TeacherService {
                 }
             }
 
-            Teacher teacherToSave = new Teacher(name, email);
-            List<Section> list = new ArrayList<>();
-            if(sections != null) {
-                // Associate section with the teacher
-                for (Section section : sections) {
-                    Section s = new Section(section.getName(), section.getDepartment(), section.getCourse(), section.getTeacher());
-                    list.add(s);
-                }
-            }
-
+            Teacher teacherToSave = new Teacher();
             teacherToSave.setName(name);
             teacherToSave.setEmail(email);
             teacherToSave.setDepartment(department);
-            teacherToSave.setSections(list);
             Teacher teacher = teacherRepository.save(teacherToSave);
             data.put("data", teacher);
             data.put("statusMessage", HttpStatus.CREATED);
@@ -214,7 +195,7 @@ public class TeacherServiceImplementation implements TeacherService {
         }
     }
 
-    public ResponseEntity<Object> editTeacher(int id, String name, String email, Department department, List<Section> sections) {
+    public ResponseEntity<Object> editTeacher(int id, String name, String email, Department department) {
         Map<String, Object> data = new HashMap<>();
 
         try {
