@@ -41,6 +41,11 @@ public class Student {
         this.sections = sections;
     }
 
+    public Student(String name, String email) {
+        this.email = email;
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
