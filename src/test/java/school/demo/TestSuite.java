@@ -7,7 +7,6 @@ import school.demo.repository.TeacherRepositoryTest;
 @Suite
 @SelectPackages("school.demo.repository")
 @SelectClasses({SectionRepositoryTest.class, TeacherRepositoryTest.class})
-@IncludeTags("Section_findByName")
-@ExcludeTags("Section_findByDepartmentId")
+@IncludeTags("Exist")
 public class TestSuite {
 }
