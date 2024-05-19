@@ -42,6 +42,12 @@ public class Teacher {
         this.email = email;
     }
 
+    public Teacher(String name, String email, Department department) {
+        this.name = name;
+        this.email = email;
+        this.department = department;
+    }
+
     public Teacher(int teacherId) {
         this.id = teacherId;
     }

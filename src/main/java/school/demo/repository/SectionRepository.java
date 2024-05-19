@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Integer> {
+    @Query("SELECT s FROM Section s WHERE s.name = :name")
     Optional<Section> findByName(String name);
     @Query("SELECT s FROM Section s WHERE s.department.id = :departmentId")
     List<Section> findByDepartmentId(Integer departmentId);
