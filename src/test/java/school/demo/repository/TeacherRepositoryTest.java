@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import school.demo.model.Department;
 import school.demo.model.Teacher;
-import school.demo.utils.MessageConstants;
+import school.demo.utils.TestMessageConstants;
 import school.demo.utils.TestConstants;
 
 import java.util.List;
@@ -47,8 +47,8 @@ public class TeacherRepositoryTest {
         Optional<Teacher> teacherOptional = teacherRepository.findByEmail(givenEmail);
 
         //Then
-        Assertions.assertTrue(teacherOptional.isPresent(), MessageConstants.TEACHER_NOT_PRESENT_MESSAGE);
-        Assertions.assertEquals(givenEmail, teacherOptional.get().getEmail(), MessageConstants.EMAIL_NOT_MATCH_MESSAGE);
+        Assertions.assertTrue(teacherOptional.isPresent(), TestMessageConstants.TEACHER_NOT_PRESENT_MESSAGE);
+        Assertions.assertEquals(givenEmail, teacherOptional.get().getEmail(), TestMessageConstants.EMAIL_NOT_MATCH_MESSAGE);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class TeacherRepositoryTest {
         Optional<Teacher> teacherOptional = teacherRepository.findByEmail(givenEmail);
 
         //Then
-        Assertions.assertTrue(teacherOptional.isEmpty(), MessageConstants.TEACHER_PRESENT_MESSAGE);
+        Assertions.assertTrue(teacherOptional.isEmpty(), TestMessageConstants.TEACHER_PRESENT_MESSAGE);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class TeacherRepositoryTest {
         Optional<Teacher> teacherOptional = teacherRepository.findByEmail(TestConstants.NULL_STRING_VALUE);
 
         //Then
-        Assertions.assertTrue(teacherOptional.isEmpty(), MessageConstants.TEACHER_PRESENT_MESSAGE);
+        Assertions.assertTrue(teacherOptional.isEmpty(), TestMessageConstants.TEACHER_PRESENT_MESSAGE);
     }
 
     @Test
@@ -90,8 +90,8 @@ public class TeacherRepositoryTest {
         List<Teacher> teacherList = teacherRepository.findByName(givenName);
 
         //Then
-        Assertions.assertFalse(teacherList.isEmpty(), MessageConstants.EMPTY_LIST_MESSAGE);
-        Assertions.assertEquals(TestConstants.TEACHER_EMAIL, teacherList.get(0).getEmail(), MessageConstants.EMAIL_NOT_MATCH_MESSAGE);
+        Assertions.assertFalse(teacherList.isEmpty(), TestMessageConstants.EMPTY_LIST_MESSAGE);
+        Assertions.assertEquals(TestConstants.TEACHER_EMAIL, teacherList.get(0).getEmail(), TestMessageConstants.EMAIL_NOT_MATCH_MESSAGE);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class TeacherRepositoryTest {
         List<Teacher> teacherList = teacherRepository.findByName(givenName);
 
         //Then
-        Assertions.assertTrue(teacherList.isEmpty(), MessageConstants.EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(teacherList.isEmpty(), TestMessageConstants.EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -121,7 +121,7 @@ public class TeacherRepositoryTest {
         List<Teacher> teacherList = teacherRepository.findByName(givenName);
 
         //Then
-        Assertions.assertTrue(teacherList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(teacherList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @AfterEach

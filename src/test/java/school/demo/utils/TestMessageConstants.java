@@ -3,7 +3,7 @@ package school.demo.utils;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class MessageConstants {
+public class TestMessageConstants {
     //LIST MESSAGES
     public final String EMPTY_LIST_MESSAGE = "The list is empty";
     public final String NOT_EMPTY_LIST_MESSAGE = "The list is not empty";

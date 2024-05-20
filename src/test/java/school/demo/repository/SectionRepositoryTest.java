@@ -9,7 +9,7 @@ import school.demo.model.Course;
 import school.demo.model.Department;
 import school.demo.model.Section;
 import school.demo.model.Teacher;
-import school.demo.utils.MessageConstants;
+import school.demo.utils.TestMessageConstants;
 import school.demo.utils.TestConstants;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class SectionRepositoryTest {
         Optional<Section> sectionOptional = sectionRepository.findByName(givenName);
 
         //Then
-        Assertions.assertEquals(givenName, sectionOptional.get().getName(), MessageConstants.SECTION_PRESENT_MESSAGE);
+        Assertions.assertEquals(givenName, sectionOptional.get().getName(), TestMessageConstants.SECTION_PRESENT_MESSAGE);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByDepartmentId(givenDepartmentId);
 
         //Then
-        Assertions.assertNotNull(sectionList, MessageConstants.EMPTY_LIST_MESSAGE);
+        Assertions.assertNotNull(sectionList, TestMessageConstants.EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByDepartmentId(givenDepartmentId);
 
         //Then
-        Assertions.assertTrue(sectionList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(sectionList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -134,7 +134,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByDepartmentId(givenDepartmentId);
 
         //Then
-        Assertions.assertTrue(sectionList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(sectionList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -149,7 +149,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByTeacherId(givenId);
 
         //Then
-        Assertions.assertFalse(sectionList.isEmpty(), MessageConstants.EMPTY_LIST_MESSAGE);
+        Assertions.assertFalse(sectionList.isEmpty(), TestMessageConstants.EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -164,7 +164,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByTeacherId(givenId);
 
         //Then
-        Assertions.assertTrue(sectionList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(sectionList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -179,7 +179,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByTeacherId(givenId);
 
         //Then
-        Assertions.assertTrue(sectionList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(sectionList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -194,7 +194,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByTeacherName(name);
 
         //Then
-        Assertions.assertFalse(sectionList.isEmpty(), MessageConstants.EMPTY_LIST_MESSAGE);
+        Assertions.assertFalse(sectionList.isEmpty(), TestMessageConstants.EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -209,7 +209,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByTeacherName(name);
 
         //Then
-        Assertions.assertTrue(sectionList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(sectionList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -224,7 +224,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByTeacherName(givenName);
 
         //Then
-        Assertions.assertTrue(sectionList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(sectionList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -239,7 +239,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByTeacherEmail(givenEmail);
 
         //Then
-        Assertions.assertFalse(sectionList.isEmpty(), MessageConstants.EMPTY_LIST_MESSAGE);
+        Assertions.assertFalse(sectionList.isEmpty(), TestMessageConstants.EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -254,7 +254,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByTeacherEmail(givenEmail);
 
         //Then
-        Assertions.assertTrue(sectionList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(sectionList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -269,7 +269,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByTeacherEmail(givenEmail);
 
         //Then
-        Assertions.assertTrue(sectionList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(sectionList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -284,8 +284,8 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByCourseId(givenCourseId);
 
         //Then
-        Assertions.assertFalse(sectionList.isEmpty(), MessageConstants.EMPTY_LIST_MESSAGE);
-        Assertions.assertEquals(givenCourseId, sectionList.get(0).getCourse().getId(), MessageConstants.COURSE_ID_NOT_MATCH_MESSAGE);
+        Assertions.assertFalse(sectionList.isEmpty(), TestMessageConstants.EMPTY_LIST_MESSAGE);
+        Assertions.assertEquals(givenCourseId, sectionList.get(0).getCourse().getId(), TestMessageConstants.COURSE_ID_NOT_MATCH_MESSAGE);
     }
 
     @Test
@@ -300,7 +300,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByCourseId(givenCourseId);
 
         //Then
-        Assertions.assertTrue(sectionList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(sectionList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -315,7 +315,7 @@ public class SectionRepositoryTest {
         List<Section> sectionList = sectionRepository.findByCourseId(givenCourseId);
 
         //Then
-        Assertions.assertTrue(sectionList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(sectionList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @AfterEach

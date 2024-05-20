@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import school.demo.model.Student;
-import school.demo.utils.MessageConstants;
+import school.demo.utils.TestMessageConstants;
 import school.demo.utils.TestConstants;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class StudentRepositoryTest {
         Optional<Student> studentTest = studentRepository.findByEmail(givenEmail);
 
         //Then
-        Assertions.assertNotNull(studentTest, MessageConstants.STUDENT_IS_NULL);
+        Assertions.assertNotNull(studentTest, TestMessageConstants.STUDENT_IS_NULL);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class StudentRepositoryTest {
         Optional<Student> studentOptional = studentRepository.findByEmail(givenEmail);
 
         //Then
-        Assertions.assertEquals(Optional.empty(), studentOptional, MessageConstants.STUDENT_NOT_NULL);
+        Assertions.assertEquals(Optional.empty(), studentOptional, TestMessageConstants.STUDENT_NOT_NULL);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class StudentRepositoryTest {
         Optional<Student> studentTest = studentRepository.findByEmail(givenEmail);
 
         //Then
-        Assertions.assertEquals(Optional.empty() ,studentTest, MessageConstants.STUDENT_NOT_NULL);
+        Assertions.assertEquals(Optional.empty() ,studentTest, TestMessageConstants.STUDENT_NOT_NULL);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class StudentRepositoryTest {
         List<Student> studentList = studentRepository.findByName(givenName);
 
         //Then
-        Assertions.assertFalse(studentList.isEmpty(), MessageConstants.EMPTY_LIST_MESSAGE);
+        Assertions.assertFalse(studentList.isEmpty(), TestMessageConstants.EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class StudentRepositoryTest {
         List<Student> studentList = studentRepository.findByName(givenName);
 
         //Then
-        Assertions.assertTrue(studentList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(studentList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
@@ -116,7 +116,7 @@ public class StudentRepositoryTest {
         List<Student> studentList = studentRepository.findByName(givenName);
 
         //Then
-        Assertions.assertTrue(studentList.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(studentList.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @AfterEach

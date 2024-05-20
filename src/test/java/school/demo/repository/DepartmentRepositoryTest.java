@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import school.demo.model.Department;
-import school.demo.utils.MessageConstants;
+import school.demo.utils.TestMessageConstants;
 import school.demo.utils.TestConstants;
 
 import java.util.Optional;
@@ -38,7 +38,7 @@ public class DepartmentRepositoryTest {
         Optional<Department> optionalDepartment = departmentRepository.findByName(givenName);
 
         //Then
-        Assertions.assertNotNull(optionalDepartment, MessageConstants.DEPARTMENT_IS_NULL);
+        Assertions.assertNotNull(optionalDepartment, TestMessageConstants.DEPARTMENT_IS_NULL);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class DepartmentRepositoryTest {
         Optional<Department> optionalDepartment = departmentRepository.findByName(givenName);
 
         //Then
-        Assertions.assertTrue(optionalDepartment.isEmpty(), MessageConstants.DEPARTMENT_NOT_NULL);
+        Assertions.assertTrue(optionalDepartment.isEmpty(), TestMessageConstants.DEPARTMENT_NOT_NULL);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class DepartmentRepositoryTest {
         Optional<Department> optionalDepartment = departmentRepository.findByName(givenName);
 
         //Then
-        Assertions.assertTrue(optionalDepartment.isEmpty(), MessageConstants.DEPARTMENT_NOT_NULL);
+        Assertions.assertTrue(optionalDepartment.isEmpty(), TestMessageConstants.DEPARTMENT_NOT_NULL);
     }
 
     @AfterEach

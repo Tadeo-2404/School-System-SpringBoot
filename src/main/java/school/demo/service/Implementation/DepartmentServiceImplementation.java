@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import school.demo.model.Course;
 import school.demo.model.Department;
-import school.demo.repository.CourseRepository;
 import school.demo.repository.DepartmentRepository;
 import school.demo.service.DepartmentService;
+import school.demo.utils.CustomResponse;
+import school.demo.utils.MessageConstants;
+
 import java.util.*;
 
 /**
@@ -27,184 +28,186 @@ public class DepartmentServiceImplementation implements DepartmentService {
         this.departmentRepository = departmentRepository;
     }
 
-    public ResponseEntity<Object> getDepartments() {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getDepartments() {
+        CustomResponse customResponse = new CustomResponse();
         try {
             List<Department> list = departmentRepository.findAll();
             if (list.size() > 0) {
-                data.put("data", list);
-                data.put("statusMessage", HttpStatus.OK);
-                data.put("statusCode", HttpStatus.OK.value());
-                return new ResponseEntity<>(data, HttpStatus.OK);
+                customResponse.setData(list);
+                customResponse.setStatusMessage(HttpStatus.OK);
+                customResponse.setStatusCode(HttpStatus.OK.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.OK);
             } else {
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> getDepartmentsById(int id) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getDepartmentsById(int id) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             Optional<Department> department = departmentRepository.findById(id);
             if (department.isPresent()) {
-                data.put("data", department);
-                data.put("statusMessage", HttpStatus.OK);
-                data.put("statusCode", HttpStatus.OK.value());
-                return new ResponseEntity<>(data, HttpStatus.OK);
+                customResponse.setData(department);
+                customResponse.setStatusMessage(HttpStatus.OK);
+                customResponse.setStatusCode(HttpStatus.OK.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.OK);
             } else {
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> getDepartmentsByName(String name) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getDepartmentsByName(String name) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             Optional<Department> department = departmentRepository.findByName(name);
             if (department.isPresent()) {
-                data.put("data", department);
-                data.put("statusMessage", HttpStatus.OK);
-                data.put("statusCode", HttpStatus.OK.value());
-                return new ResponseEntity<>(data, HttpStatus.OK);
+                customResponse.setData(department);
+                customResponse.setStatusMessage(HttpStatus.OK);
+                customResponse.setStatusCode(HttpStatus.OK.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.OK);
             } else {
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                return new ResponseEntity<>(customResponse ,HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> createDepartment(String name) {
-        Map<String, Object> data = new HashMap<>();
-
+    public ResponseEntity<CustomResponse> createDepartment(String name) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             if (name == null) {
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                data.put("message", "Missing Name attribute");
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setMessage(MessageConstants.MISSING_NAME_MESSAGE);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             Optional<Department> departmentExists = departmentRepository.findByName(name);
             if (departmentExists.isPresent()) {
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                data.put("message", "Duplicated attribute name");
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setMessage(MessageConstants.DUPLICATE_NAME_ATTRIBUTE_MESSAGE);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
+            //save department
             Department departmentToSave = new Department(name);
             Department departmentSaved = departmentRepository.save(departmentToSave);
-            data.put("data", departmentSaved);
-            data.put("statusMessage", HttpStatus.CREATED);
-            data.put("statusCode", HttpStatus.CREATED.value());
-            return new ResponseEntity<>(data, HttpStatus.CREATED);
+
+            customResponse.setData(departmentSaved);
+            customResponse.setStatusMessage(HttpStatus.CREATED);
+            customResponse.setStatusCode(HttpStatus.CREATED.value());
+            customResponse.setMessage(MessageConstants.DEPARTMENT_CREATED_MESSAGE);
+            return new ResponseEntity<>(customResponse, HttpStatus.CREATED);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> editDepartment(int id, String name) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> editDepartment(int id, String name) {
+        CustomResponse customResponse = new CustomResponse();
         Department departmentToSave = new Department();
 
         try {
             if(id == 0) {
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                data.put("message", "Missing ID attribute");
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setMessage(MessageConstants.MISSING_ID_ATTRIBUTE_MESSAGE);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             if (name == null) {
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                data.put("message", "Missing Name attribute");
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setMessage(MessageConstants.MISSING_NAME_MESSAGE);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             Optional<Department> existDepartmentName = departmentRepository.findByName(name);
             if(existDepartmentName.isPresent()) {
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                data.put("message", "Department with name '" + name + "' already exists");
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setMessage(String.format(MessageConstants.DEPARTMENT_DUPLICATED_NAME_MESSAGE, name));
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
 
             boolean existDepartment = departmentRepository.existsById(id);
             if(!existDepartment) {
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                data.put("message", "Department with ID '" + id + "' not found");
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setMessage(String.format(MessageConstants.DEPARTMENT_NOT_FOUND_MESSAGE, id));
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
 
             departmentToSave.setId(id);
             departmentToSave.setName(name);
             Department department = departmentRepository.save(departmentToSave);
-            data.put("data", department);
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            data.put("message", "Department edited successfully");
-            return new ResponseEntity<>(data, HttpStatus.OK);
+            customResponse.setData(department);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            customResponse.setMessage(MessageConstants.DEPARTMENT_EDITED_MESSAGE);
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            customResponse.setMessage(e.getMessage());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> deleteDepartment(int id) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> deleteDepartment(int id) {
+        CustomResponse customResponse = new CustomResponse();
 
         try {
             if(id == 0) {
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                data.put("message", "Missing ID attribute");
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setMessage(MessageConstants.MISSING_ID_ATTRIBUTE_MESSAGE);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             if(!departmentRepository.existsById(id)) {
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                data.put("message", "Department with ID '" + id + "' not found");
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setMessage(String.format(MessageConstants.DEPARTMENT_NOT_FOUND_MESSAGE, id));
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
 
             departmentRepository.deleteById(id);
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            data.put("message", "Department removed successfully");
-            return new ResponseEntity<>(data, HttpStatus.CREATED);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            customResponse.setMessage(MessageConstants.DEPARTMENT_REMOVED_MESSAGE);
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            customResponse.setMessage(e.getMessage());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

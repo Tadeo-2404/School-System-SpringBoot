@@ -1,6 +1,7 @@
 package school.demo.service;
 import org.springframework.http.ResponseEntity;
 import school.demo.model.Course;
+import school.demo.utils.CustomResponse;
 
 import java.util.List;
 /**
@@ -14,43 +15,41 @@ import java.util.List;
 public interface DepartmentService {
     /**
      * Retrieves all departments.
-     * @return ResponseEntity<Object> containing a list of departments
+     * @return ResponseEntity<school.demo.utils.CustomResponse> containing a list of departments
      */
-    ResponseEntity<Object> getDepartments();
+    ResponseEntity<CustomResponse> getDepartments();
     /**
      * Retrieves a department by its ID.
      * @param id the unique identifier of the department
-     * @return ResponseEntity<Object> containing the department if found,
+     * @return ResponseEntity<CustomResponse> containing the department if found,
      *         or a 404 response if the department does not exist
      */
-    ResponseEntity<Object> getDepartmentsById(int id);
+    ResponseEntity<CustomResponse> getDepartmentsById(int id);
     /**
      * Retrieves departments by name.
      * @param name the name of the department
-     * @return ResponseEntity<Object> containing a list of departments with the specified name
+     * @return ResponseEntity<CustomResponse> containing a list of departments with the specified name
      */
-    ResponseEntity<Object> getDepartmentsByName(String name);
+    ResponseEntity<CustomResponse> getDepartmentsByName(String name);
     /**
      * Creates a new department.
      * @param name    the name of the department to create
-     * @param courses the list of courses associated with the department
-     * @return ResponseEntity<Object> containing the created department
+     * @return ResponseEntity<CustomResponse> containing the created department
      */
-    ResponseEntity<Object> createDepartment(String name);
+    ResponseEntity<CustomResponse> createDepartment(String name);
     /**
      * Edits an existing department.
      * @param id      the unique identifier of the department to edit
      * @param name    the new name of the department
-     * @param courses the new list of courses associated with the department
-     * @return ResponseEntity<Object> containing the updated department if successful,
+     * @return ResponseEntity<CustomResponse> containing the updated department if successful,
      *         or a 404 response if the department does not exist
      */
-    ResponseEntity<Object> editDepartment(int id, String name);
+    ResponseEntity<CustomResponse> editDepartment(int id, String name);
     /**
      * Deletes a department by its ID.
      * @param id the unique identifier of the department to delete
-     * @return ResponseEntity<Object> with status 200 if successful,
+     * @return ResponseEntity<CustomResponse> with status 200 if successful,
      *         or a 404 response if the department does not exist
      */
-    ResponseEntity<Object> deleteDepartment(int id);
+    ResponseEntity<CustomResponse> deleteDepartment(int id);
 }

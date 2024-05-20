@@ -7,8 +7,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import school.demo.model.Course;
 import school.demo.model.Department;
-import school.demo.utils.MessageConstants;
 import school.demo.utils.TestConstants;
+import school.demo.utils.TestMessageConstants;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,8 +47,8 @@ public class CourseRepositoryTest {
         Optional<Course> courseTest = courseRepository.findByName(givenName);
 
         //When
-        Assertions.assertTrue(courseTest.isPresent(), MessageConstants.COURSE_NOT_PRESENT_MESSAGE);
-        Assertions.assertEquals(givenName, courseTest.get().getName(), MessageConstants.COURSE_NAME_NOT_MATCH_MESSAGE);
+        Assertions.assertTrue(courseTest.isPresent(), TestMessageConstants.COURSE_NOT_PRESENT_MESSAGE);
+        Assertions.assertEquals(givenName, courseTest.get().getName(), TestMessageConstants.COURSE_NAME_NOT_MATCH_MESSAGE);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class CourseRepositoryTest {
         Optional<Course> courseTest = courseRepository.findByName(givenName);
 
         //Then
-        Assertions.assertTrue(courseTest.isEmpty(), MessageConstants.COURSE_NOT_PRESENT_MESSAGE);
+        Assertions.assertTrue(courseTest.isEmpty(), TestMessageConstants.COURSE_NOT_PRESENT_MESSAGE);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class CourseRepositoryTest {
         Optional<Course> courseTest = courseRepository.findByName(givenName);
 
         //Then
-        Assertions.assertTrue(courseTest.isEmpty(), MessageConstants.COURSE_NOT_PRESENT_MESSAGE);
+        Assertions.assertTrue(courseTest.isEmpty(), TestMessageConstants.COURSE_NOT_PRESENT_MESSAGE);
     }
 
     @Test
@@ -93,8 +93,8 @@ public class CourseRepositoryTest {
         List<Course> list = courseRepository.findByDepartmentId(givenDepartmentId);
 
         //Then
-        Assertions.assertNotNull(list, MessageConstants.EMPTY_LIST_MESSAGE);
-        Assertions.assertEquals(TestConstants.COURSE_NAME, list.get(0).getName(), MessageConstants.COURSE_NAME_NOT_MATCH_MESSAGE);
+        Assertions.assertNotNull(list, TestMessageConstants.EMPTY_LIST_MESSAGE);
+        Assertions.assertEquals(TestConstants.COURSE_NAME, list.get(0).getName(), TestMessageConstants.COURSE_NAME_NOT_MATCH_MESSAGE);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class CourseRepositoryTest {
         List<Course> list = courseRepository.findByDepartmentId(givenDepartmentId);
 
         //Then
-        Assertions.assertTrue(list.isEmpty(), MessageConstants.NOT_EMPTY_LIST_MESSAGE);
+        Assertions.assertTrue(list.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
     }
 
     @Test
