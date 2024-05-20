@@ -5,7 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import school.demo.model.Course;
+import school.demo.model.Department;
 import school.demo.model.Section;
+import school.demo.model.Teacher;
 import school.demo.utils.MessageConstants;
 import school.demo.utils.TestConstants;
 
@@ -19,6 +22,10 @@ public class SectionRepositoryTest {
     private final DepartmentRepository departmentRepository;
     private final CourseRepository courseRepository;
     private final TeacherRepository teacherRepository;
+    private Department department;
+    private Teacher teacher;
+    private Course course;
+    private Section section;
 
     @Autowired
     public SectionRepositoryTest(SectionRepository sectionRepository, DepartmentRepository departmentRepository, CourseRepository courseRepository, TeacherRepository teacherRepository) {
@@ -30,10 +37,14 @@ public class SectionRepositoryTest {
 
     @BeforeEach
     public void setup() {
-        departmentRepository.save(TestConstants.department);
-        teacherRepository.save(TestConstants.teacher);
-        courseRepository.save(TestConstants.course);
-        sectionRepository.save(TestConstants.section);
+        department = new Department(TestConstants.DEPARTMENT_NAME);
+        this.departmentRepository.save(department);
+        teacher = new Teacher(TestConstants.TEACHER_NAME, TestConstants.TEACHER_EMAIL, department);
+        this.teacherRepository.save(teacher);
+        course = new Course(TestConstants.COURSE_NAME, department);
+        this.courseRepository.save(course);
+        section = new Section(TestConstants.SECTION_NAME, department, course, teacher);
+        sectionRepository.save(section);
     }
 
     @Test
@@ -87,7 +98,7 @@ public class SectionRepositoryTest {
     @Tag("Exist")
     public void findByDepartmentId_ShouldReturnCorrectEntity_WhenIdExists() {
         //Given
-        int givenDepartmentId = TestConstants.department.getId();
+        int givenDepartmentId = this.department.getId();
 
         //When
         List<Section> sectionList = sectionRepository.findByDepartmentId(givenDepartmentId);
@@ -132,7 +143,7 @@ public class SectionRepositoryTest {
     @Tag("Exist")
     public void findByTeacherId_ShouldReturnList_WhenIdExists() {
         //Given
-        int givenId = TestConstants.teacher.getId();
+        int givenId = this.teacher.getId();
 
         //When
         List<Section> sectionList = sectionRepository.findByTeacherId(givenId);
@@ -267,14 +278,14 @@ public class SectionRepositoryTest {
     @Tag("Exist")
     public void findByCourseId_ShouldReturnList_WhenCourseIdExists() {
         //Given
-        Integer givenCourseId = TestConstants.course.getId();
+        Integer givenCourseId = this.course.getId();
 
         //When
         List<Section> sectionList = sectionRepository.findByCourseId(givenCourseId);
 
         //Then
         Assertions.assertFalse(sectionList.isEmpty(), MessageConstants.EMPTY_LIST_MESSAGE);
-        Assertions.assertEquals(1, sectionList.get(0).getCourse().getId(), MessageConstants.COURSE_ID_NOT_MATCH_MESSAGE);
+        Assertions.assertEquals(givenCourseId, sectionList.get(0).getCourse().getId(), MessageConstants.COURSE_ID_NOT_MATCH_MESSAGE);
     }
 
     @Test

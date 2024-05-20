@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import school.demo.model.Department;
 import school.demo.model.Teacher;
 import school.demo.utils.MessageConstants;
 import school.demo.utils.TestConstants;
@@ -15,12 +16,23 @@ import java.util.Optional;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class TeacherRepositoryTest {
+    private final TeacherRepository teacherRepository;
+    private final DepartmentRepository departmentRepository;
+    private Department department;
+    private Teacher teacher;
+
     @Autowired
-    private TeacherRepository teacherRepository;
+    public TeacherRepositoryTest(TeacherRepository teacherRepository, DepartmentRepository departmentRepository) {
+        this.teacherRepository = teacherRepository;
+        this.departmentRepository = departmentRepository;
+    }
 
     @BeforeEach
     public void setup() {
-        this.teacherRepository.save(TestConstants.teacher);
+        department = new Department(TestConstants.DEPARTMENT_NAME);
+        this.departmentRepository.save(department);
+        teacher = new Teacher(TestConstants.TEACHER_NAME, TestConstants.TEACHER_EMAIL, department);
+        this.teacherRepository.save(teacher);
     }
 
     @Test
@@ -114,6 +126,8 @@ public class TeacherRepositoryTest {
 
     @AfterEach
     public void teardown() {
+        this.department = null;
+        this.teacher = null;
         this.teacherRepository.deleteAll();
     }
 }
