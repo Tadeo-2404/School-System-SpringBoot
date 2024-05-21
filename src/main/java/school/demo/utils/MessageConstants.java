@@ -38,4 +38,11 @@ public class MessageConstants {
 
     public final String SECTION_NOT_FOUND_MESSAGE = "Section with ID '%d' not found";
 
+    public final String COURSE_NOT_FOUND_MESSAGE = "Course with ID '%d' not found";
+    public final String COURSE_NOT_FOUND_NAME_MESSAGE = "Course with Name '%s' not found";
+    public final String COURSE_NOT_FOUND_DEPARTMENT_NAME = "Courses with Department name $%s not found";
+    public final String COURSE_CREATED_MESSAGE = "Course created successfully";
+    public final String COURSE_EDITED_MESSAGE = "Course edited successfully";
+    public final String COURSE_REMOVED_MESSAGE = "Course removed successfully";
+
 }
