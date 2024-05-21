@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import school.demo.model.*;
 import school.demo.service.*;
+import school.demo.utils.CustomResponse;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -46,13 +47,12 @@ public class PageController {
     //DEPARTMENTS
     @GetMapping("/departments/page")
     public String department(Model model) {
-        ResponseEntity<Object> responseEntity = departmentService.getDepartments();
+        ResponseEntity<CustomResponse> responseEntity = departmentService.getDepartments();
 
         if(responseEntity.getStatusCode() == HttpStatus.NOT_FOUND) {
             model.addAttribute("noDepartmentsFound", true);
         } else {
-            Map<String, Object> responseBody = (Map<String, Object>) responseEntity.getBody();
-            List<Department> departmentList = (List<Department>) responseBody.get("data");
+            List<Department> departmentList = (List<Department>) responseEntity.getBody().getData();
             model.addAttribute("list", departmentList);
             model.addAttribute("noDepartmentsFound", false);
         }
@@ -63,15 +63,13 @@ public class PageController {
 
     @PostMapping("/departments/save")
     public String saveDepartment(@RequestParam String name) {
-        ResponseEntity<Object> response = departmentService.createDepartment(name);
-        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
-        Object message = responseBody.get("message");
-        Object statusCode = responseBody.get("statusCode");
+        ResponseEntity<CustomResponse> response = departmentService.createDepartment(name);
+        String message = response.getBody().getMessage();
+        String statusCode = String.valueOf(response.getBody().getStatusCode());
 
-        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
-            String errorMessage = message.toString();
+        if (statusCode.contains("5") || statusCode.contains("4")) {
             // Append the error message as a query parameter in the redirect URL
-            return "redirect:/departments/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+            return "redirect:/departments/page?errorMessage=" + URLEncoder.encode(message, StandardCharsets.UTF_8);
         }
         // Redirect to the department page
         return "redirect:/departments/page";
@@ -79,15 +77,13 @@ public class PageController {
 
     @PostMapping("/departments/edit")
     public String editDepartment(@ModelAttribute("department") Department department) {
-        ResponseEntity<Object> response = departmentService.editDepartment(department.getId(), department.getName());
-        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
-        Object message = responseBody.get("message");
-        Object statusCode = responseBody.get("statusCode");
+        ResponseEntity<CustomResponse> response = departmentService.editDepartment(department.getId(), department.getName());
+        String message = response.getBody().getMessage();
+        String statusCode = String.valueOf(response.getBody().getStatusCode());
 
-        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
-            String errorMessage = message.toString();
+        if (statusCode.contains("5") || statusCode.contains("4")) {
             // Append the error message as a query parameter in the redirect URL
-            return "redirect:/departments/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+            return "redirect:/departments/page?errorMessage=" + URLEncoder.encode(message, StandardCharsets.UTF_8);
         }
         // Redirect to the department page
         return "redirect:/departments/page";
@@ -95,15 +91,13 @@ public class PageController {
 
     @PostMapping("/departments/delete")
     public String deleteDepartment(@ModelAttribute("department") Department department) {
-        ResponseEntity<Object> response = departmentService.deleteDepartment(department.getId());
-        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
-        Object message = responseBody.get("message");
-        Object statusCode = responseBody.get("statusCode");
+        ResponseEntity<CustomResponse> response = departmentService.deleteDepartment(department.getId());
+        String message = response.getBody().getMessage();
+        String statusCode = String.valueOf(response.getBody().getStatusCode());
 
-        if (statusCode.toString().contains("5") || statusCode.toString().contains("4")) {
-            String errorMessage = message.toString();
+        if (statusCode.contains("5") || statusCode.contains("4")) {
             // Append the error message as a query parameter in the redirect URL
-            return "redirect:/departments/page?errorMessage=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+            return "redirect:/departments/page?errorMessage=" + URLEncoder.encode(message, StandardCharsets.UTF_8);
         }
         // Redirect to the department page
         return "redirect:/departments/page";
@@ -112,8 +106,8 @@ public class PageController {
     //STUDENTS
     @GetMapping("/students/page")
     public String student(Model model) {
-        ResponseEntity<Object> responseEntity = studentService.getStudents();
-        ResponseEntity<Object> responseEntitySections = sectionService.getSections();
+        ResponseEntity<CustomResponse> responseEntity = studentService.getStudents();
+        ResponseEntity<CustomResponse> responseEntitySections = sectionService.getSections();
 
         if(responseEntity.getStatusCode() == HttpStatus.NOT_FOUND) {
             model.addAttribute("studentsFound", false);
