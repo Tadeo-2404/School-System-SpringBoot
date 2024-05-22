@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import school.demo.model.*;
 import school.demo.repository.*;
 import school.demo.service.SectionService;
+import school.demo.utils.CustomResponse;
+import school.demo.utils.MessageConstants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,298 +39,305 @@ public class SectionServiceImplementation implements SectionService {
         this.studentRepository = studentRepository;
     }
 
-    public ResponseEntity<Object> getSections() {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getSections() {
+        CustomResponse customResponse = new CustomResponse();
         try {
             List<Section> list = sectionRepository.findAll();
             if (list.isEmpty()) {
-                data.put("message", "No data found");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(MessageConstants.NO_REGISTRIES_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
-            data.put("data", list);
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+
+            customResponse.setData(list);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> getSectionById(Integer id) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getSectionById(Integer id) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             if(id == null) {
-                data.put("message", "Missing ID attribute");
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setMessage(MessageConstants.MISSING_ID_ATTRIBUTE_MESSAGE);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             Optional<Section> sectionOptional = sectionRepository.findById(id);
             if (sectionOptional.isEmpty()) {
-                data.put("message", "Section with ID '" + id + "' not found");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(MessageConstants.NO_REGISTRIES_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
-            data.put("data", sectionOptional);
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+
+            customResponse.setData(sectionOptional);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> getSectionByName(String name) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getSectionByName(String name) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             Optional<Section> sectionOptional = sectionRepository.findByName(name);
             if (sectionOptional.isEmpty()) {
-                data.put("message", "Section with Name '" + name + "' not found");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(String.format(MessageConstants.SECTION_NOT_FOUND_NAME_MESSAGE, name));
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
-            data.put("data", sectionOptional);
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+            customResponse.setData(sectionOptional.get());
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> getSectionsByDepartmentId(Integer departmentId) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getSectionsByDepartmentId(Integer departmentId) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             if(departmentId == null) {
-                data.put("message", "Missing ID attribute");
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                customResponse.setMessage(MessageConstants.MISSING_DEPARTMENT_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             List<Section> list = sectionRepository.findByDepartmentId(departmentId);
             if (list.isEmpty()) {
-                data.put("message", "Sections with departmentId '" + departmentId + "' not found");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                customResponse.setMessage(String.format(MessageConstants.SECTION_NOT_FOUND_DEPARTMENT_ID_MESSAGE, departmentId));
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
-            data.put("data", list);
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+
+            customResponse.setData(list);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> getSectionsByDepartmentName(String name) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getSectionsByDepartmentName(String name) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             List<Section> list = sectionRepository.findByDepartmentName(name);
             if (list.isEmpty()) {
-                data.put("message", "Sections with departmentName '" + name + "' not found");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(MessageConstants.NO_REGISTRIES_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
-            data.put("data", list);
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+
+            customResponse.setData(list);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> getSectionsByTeacherId(Integer teacherId) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getSectionsByTeacherId(Integer teacherId) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             List<Section> list = sectionRepository.findByTeacherId(teacherId);
             if (list.isEmpty()) {
-                data.put("message", "Sections with teacherId '" + teacherId + "' not found");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(String.format(MessageConstants.SECTION_NOT_FOUND_TEACHER_ID_MESSAGE, teacherId));
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
-            data.put("data", list);
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+
+            customResponse.setData(list);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> getSectionsByTeacherName(String name) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getSectionsByTeacherName(String name) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             List<Section> list = sectionRepository.findByTeacherName(name);
             if (list.isEmpty()) {
-                data.put("message", "Sections with teacherName '" + name + "' not found");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(String.format(MessageConstants.SECTION_NOT_FOUND_TEACHER_NAME_MESSAGE, name));
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
-            data.put("data", list);
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+
+            customResponse.setData(list);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> getSectionsByTeacherEmail(String email) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> getSectionsByTeacherEmail(String email) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             List<Section> list = sectionRepository.findByTeacherEmail(email);
             if (list.isEmpty()) {
-                data.put("message", "Sections with teacherEmail '" + email + "' not found");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(String.format(MessageConstants.SECTION_NOT_FOUND_TEACHER_EMAIL_MESSAGE, email));
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
-            data.put("data", list);
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+
+            customResponse.setData(list);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> createSection(String name, Integer departmentId, Integer courseId, Integer teacherId) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> createSection(String name, Integer departmentId, Integer courseId, Integer teacherId) {
+        CustomResponse customResponse = new CustomResponse();
 
         try {
             //check if attributes are present
             if(name == null) {
-                data.put("message", "Missing name attribute");
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                customResponse.setMessage(MessageConstants.MISSING_NAME_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             if(departmentId == null) {
-                data.put("message", "Missing departmentId attribute");
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                customResponse.setMessage(MessageConstants.MISSING_DEPARTMENT_ID_ATTRIBUTE_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             if(courseId == null) {
-                data.put("message", "Missing courseId attribute");
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                customResponse.setMessage(MessageConstants.MISSING_COURSE_ID_ATTRIBUTE_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             if(teacherId == null) {
-                data.put("message", "Missing teacherId attribute");
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                customResponse.setMessage(MessageConstants.MISSING_TEACHER_ID_ATTRIBUTE_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             //checks if name already exists
             if(sectionRepository.findByName(name).isPresent()) {
-                data.put("message", "Duplicated name attribute");
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                customResponse.setMessage(MessageConstants.DUPLICATE_NAME_ATTRIBUTE_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             //checks if Department exists based on its id
             Optional<Department> department = departmentRepository.findById(departmentId);
             if(department.isEmpty()) {
-                data.put("message", "Department with id '" + departmentId + "' does not exist");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(String.format(MessageConstants.DEPARTMENT_NOT_FOUND_MESSAGE, departmentId));
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
 
             //checks if Course exists based on its id
             Optional<Course> course = courseRepository.findById(courseId);
             if(course.isEmpty()) {
-                data.put("message", "Course with id '" + courseId + "' does not exist");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(String.format(MessageConstants.COURSE_NOT_FOUND_MESSAGE, courseId));
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
 
             //checks if Teacher exists based on its id
             Optional<Teacher> teacher = teacherRepository.findById(teacherId);
             if(teacher.isEmpty()) {
-                data.put("message", "Teacher with id '" + teacherId + "' does not exist");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(String.format(MessageConstants.TEACHER_NOT_FOUND_MESSAGE, teacherId));
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
 
             Section section = sectionRepository.save(new Section(name, department.orElse(null), course.orElse(null), teacher.orElse(null)));
-            data.put("data", section);
-            data.put("message", "Section created successfully");
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+            customResponse.setData(section);
+            customResponse.setStatusMessage(HttpStatus.CREATED);
+            customResponse.setStatusCode(HttpStatus.CREATED.value());
+            customResponse.setMessage(MessageConstants.SECTION_CREATED_MESSAGE);
+            return new ResponseEntity<>(customResponse, HttpStatus.CREATED);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> editSection(Integer id, String name, Integer departmentId, Integer courseId, Integer teacherId) {
-        Map<String, Object> data = new HashMap<>();
+    public ResponseEntity<CustomResponse> editSection(Integer id, String name, Integer departmentId, Integer courseId, Integer teacherId) {
+        CustomResponse customResponse = new CustomResponse();
         //if any attribute is not null it'll be assigned to this object
         Section sectionToUpdate = new Section();
 
         try {
             //checks if id is provided
             if(id == null || id == 0) {
-                data.put("message", "Missing ID attribute");
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                customResponse.setMessage(MessageConstants.MISSING_ID_ATTRIBUTE_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             //checks if name already exists
             if(!sectionRepository.existsById(id)) {
-                data.put("message", "Section with ID '" + id + "' does not exist");
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(String.format(MessageConstants.SECTION_NOT_FOUND_MESSAGE, id));
+                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
             }
 
             //check if department object exists
@@ -336,10 +345,10 @@ public class SectionServiceImplementation implements SectionService {
                 //checks if Department exists based on its id
                 Optional<Department> department = departmentRepository.findById(departmentId);
                 if(department.isEmpty()) {
-                    data.put("message", "Department with id '" + departmentId + "' does not exist");
-                    data.put("statusMessage", HttpStatus.NOT_FOUND);
-                    data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                    return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                    customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                    customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                    customResponse.setMessage(String.format(MessageConstants.DEPARTMENT_NOT_FOUND_MESSAGE, departmentId));
+                    return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
                 }
                 sectionToUpdate.setDepartment(department.orElse(null));
             }
@@ -349,10 +358,10 @@ public class SectionServiceImplementation implements SectionService {
                 //checks if Teacher exists based on its id
                 Optional<Course> course = courseRepository.findById(courseId);
                 if(course.isEmpty()) {
-                    data.put("message", "Course with id '" + courseId + "' does not exist");
-                    data.put("statusMessage", HttpStatus.NOT_FOUND);
-                    data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                    return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                    customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                    customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                    customResponse.setMessage(String.format(MessageConstants.COURSE_NOT_FOUND_MESSAGE, courseId));
+                    return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
                 }
                 sectionToUpdate.setCourse(course.orElse(null));
             }
@@ -362,10 +371,10 @@ public class SectionServiceImplementation implements SectionService {
                 //checks if Teacher exists based on its id
                 Optional<Teacher> teacher = teacherRepository.findById(teacherId);
                 if(teacher.isEmpty()) {
-                    data.put("message", "Teacher with id '" + teacherId + "' does not exist");
-                    data.put("statusMessage", HttpStatus.NOT_FOUND);
-                    data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                    return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                    customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
+                    customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                    customResponse.setMessage(String.format(MessageConstants.TEACHER_NOT_FOUND_MESSAGE, teacherId));
+                    return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
                 }
                 sectionToUpdate.setTeacher(teacher.orElse(null));
             }
@@ -377,47 +386,46 @@ public class SectionServiceImplementation implements SectionService {
 
             sectionToUpdate.setId(id);
             Section section = sectionRepository.save(sectionToUpdate);
-            data.put("data", section);
-            data.put("message", "Section updated successfully");
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+            customResponse.setData(section);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            customResponse.setMessage(MessageConstants.DEPARTMENT_EDITED_MESSAGE);
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    public ResponseEntity<Object> deleteSection(Integer id) {
-        Map<String, Object> data = new HashMap<>();
-
+    public ResponseEntity<CustomResponse> deleteSection(Integer id) {
+        CustomResponse customResponse = new CustomResponse();
         try {
             if(id == null) {
-                data.put("message", "Missing ID attribute");
-                data.put("statusMessage", HttpStatus.BAD_REQUEST);
-                data.put("statusCode", HttpStatus.BAD_REQUEST.value());
-                return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
+                customResponse.setMessage(MessageConstants.MISSING_ID_ATTRIBUTE_MESSAGE);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             if (!sectionRepository.existsById(id)) {
-                data.put("message", "Section with ID '" + id + "' not found");
-                data.put("statusMessage", HttpStatus.NOT_FOUND);
-                data.put("statusCode", HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+                customResponse.setMessage(String.format(MessageConstants.SECTION_NOT_FOUND_MESSAGE, id));
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             sectionRepository.deleteById(id);
-            data.put("message", "Section deleted successfully");
-            data.put("statusMessage", HttpStatus.OK);
-            data.put("statusCode", HttpStatus.OK.value());
-            return new ResponseEntity<>(data, HttpStatus.OK);
+            customResponse.setMessage(MessageConstants.SECTION_REMOVED_MESSAGE);
+            customResponse.setStatusMessage(HttpStatus.OK);
+            customResponse.setStatusCode(HttpStatus.OK.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.OK);
         } catch (Exception e) {
-            data.put("message", e.getMessage());
-            data.put("statusMessage", HttpStatus.INTERNAL_SERVER_ERROR);
-            data.put("statusCode", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return new ResponseEntity<>(data, HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setMessage(e.getMessage());
+            customResponse.setStatusMessage(HttpStatus.INTERNAL_SERVER_ERROR);
+            customResponse.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

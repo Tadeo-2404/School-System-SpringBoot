@@ -9,6 +9,9 @@ public class MessageConstants {
     public final String MISSING_ATTRIBUTES_MESSAGE = "Missing Attributes";
     public final String MISSING_DEPARTMENT_MESSAGE = "Missing Department attribute";
     public final String MISSING_ID_ATTRIBUTE_MESSAGE = "Missing ID attribute";
+    public final String MISSING_COURSE_ID_ATTRIBUTE_MESSAGE = "Missing Course ID attribute";
+    public final String MISSING_TEACHER_ID_ATTRIBUTE_MESSAGE = "Missing Teacher ID attribute";
+
     public final String MISSING_DEPARTMENT_ID_ATTRIBUTE_MESSAGE = "Missing Department ID attribute";
     public final String NO_REGISTRIES_MESSAGE = "No results found";
     public final String DUPLICATE_NAME_ATTRIBUTE_MESSAGE = "Duplicated name attribute";
@@ -37,6 +40,14 @@ public class MessageConstants {
     public final String TEACHER_NOT_FOUND_DEPARTMENT_ID_MESSAGE = "Teachers with Department ID '%d' not found";
 
     public final String SECTION_NOT_FOUND_MESSAGE = "Section with ID '%d' not found";
+    public final String SECTION_NOT_FOUND_NAME_MESSAGE = "Section with Name '%s' not found";
+    public final String SECTION_NOT_FOUND_DEPARTMENT_ID_MESSAGE = "Sections with Department ID '%d' not found";
+    public final String SECTION_NOT_FOUND_TEACHER_ID_MESSAGE = "Sections with Teacher ID '%d' not found";
+    public final String SECTION_NOT_FOUND_TEACHER_NAME_MESSAGE = "Sections with Teacher Name '%s' not found";
+    public final String SECTION_NOT_FOUND_TEACHER_EMAIL_MESSAGE = "Sections with Teacher Email '%s' not found";
+    public final String SECTION_CREATED_MESSAGE = "Section created successfully";
+    public final String SECTION_EDITED_MESSAGE = "Section edited successfully";
+    public final String SECTION_REMOVED_MESSAGE = "Section removed successfully";
 
     public final String COURSE_NOT_FOUND_MESSAGE = "Course with ID '%d' not found";
     public final String COURSE_NOT_FOUND_NAME_MESSAGE = "Course with Name '%s' not found";
