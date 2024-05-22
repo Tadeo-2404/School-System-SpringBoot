@@ -7,6 +7,7 @@ import school.demo.model.Department;
 import school.demo.model.Section;
 import school.demo.model.Teacher;
 import school.demo.service.TeacherService;
+import school.demo.utils.CustomResponse;
 import school.demo.utils.TeacherRequest;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @RestController
 public class TeacherController {
-    private TeacherService teacherService;
+    private final TeacherService teacherService;
 
     @Autowired
     public TeacherController(TeacherService teacherService) {
@@ -28,7 +29,7 @@ public class TeacherController {
     }
 
     @GetMapping("/teachers")
-    public ResponseEntity<Object> getTeachers(
+    public ResponseEntity<CustomResponse> getTeachers(
             @RequestParam(required = false) Integer id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
@@ -47,26 +48,26 @@ public class TeacherController {
     }
 
     @GetMapping("/teachers/{teacher_id}")
-    public ResponseEntity<Object> getTeacherById(@PathVariable Integer teacher_id) {
+    public ResponseEntity<CustomResponse> getTeacherById(@PathVariable Integer teacher_id) {
         return teacherService.getTeachersById(teacher_id);
     }
 
     @PostMapping("/teachers")
-    public ResponseEntity<Object> createTeacher(@RequestBody TeacherRequest teacherRequest) {
+    public ResponseEntity<CustomResponse> createTeacher(@RequestBody TeacherRequest teacherRequest) {
         Teacher teacher = teacherRequest.teacher();
         Department department = teacherRequest.department();
         return teacherService.createTeacher(teacher.getName(), teacher.getEmail(), department);
     }
 
     @PutMapping("/teachers")
-    public ResponseEntity<Object> editTeacher(@RequestBody TeacherRequest teacherRequest) {
+    public ResponseEntity<CustomResponse> editTeacher(@RequestBody TeacherRequest teacherRequest) {
         Teacher teacher = teacherRequest.teacher();
         Department department = teacherRequest.department();
         return teacherService.editTeacher(teacher.getId(), teacher.getName(), teacher.getEmail(), department);
     }
 
     @DeleteMapping("/teachers")
-    public ResponseEntity<Object> deleteTeacher(@RequestBody Teacher teacher) {
+    public ResponseEntity<CustomResponse> deleteTeacher(@RequestBody Teacher teacher) {
         return teacherService.deleteTeacher(teacher.getId());
     }
 }

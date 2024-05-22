@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import school.demo.service.SectionService;
+import school.demo.utils.CustomResponse;
 import school.demo.utils.SectionRequest;
 import school.demo.utils.SectionRequestEdit;
 
@@ -25,7 +26,7 @@ public class SectionController {
     }
 
     @GetMapping("/sections")
-    public ResponseEntity<Object> getSections(
+    public ResponseEntity<CustomResponse> getSections(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Integer departmentId,
             @RequestParam(required = false) String departmentName,
@@ -50,12 +51,12 @@ public class SectionController {
     }
 
     @GetMapping("/sections/{section_id}")
-    public ResponseEntity<Object> getSectionById(Integer section_id) {
+    public ResponseEntity<CustomResponse> getSectionById(Integer section_id) {
         return sectionService.getSectionById(section_id);
     }
 
     @PostMapping("/sections")
-    public ResponseEntity<Object> createSection(@RequestBody SectionRequest sectionRequest) {
+    public ResponseEntity<CustomResponse> createSection(@RequestBody SectionRequest sectionRequest) {
         String nameSection = sectionRequest.section();
         int department = sectionRequest.departmentId();
         int course = sectionRequest.courseId();
@@ -64,7 +65,7 @@ public class SectionController {
     }
 
     @PutMapping("/sections")
-    public ResponseEntity<Object> editSection(@RequestBody SectionRequestEdit sectionRequestEdit) {
+    public ResponseEntity<CustomResponse> editSection(@RequestBody SectionRequestEdit sectionRequestEdit) {
         int id = sectionRequestEdit.sectionId();
         String nameSection = sectionRequestEdit.section();
         int department = sectionRequestEdit.departmentId();
@@ -74,7 +75,7 @@ public class SectionController {
     }
 
     @DeleteMapping("/sections/{section_id}")
-    public ResponseEntity<Object> deleteSection(@PathVariable Integer section_id) {
+    public ResponseEntity<CustomResponse> deleteSection(@PathVariable Integer section_id) {
         return sectionService.deleteSection(section_id);
     }
 }

@@ -7,6 +7,7 @@ import school.demo.model.Course;
 import school.demo.model.Department;
 import school.demo.service.CourseService;
 import school.demo.utils.CourseRequest;
+import school.demo.utils.CustomResponse;
 
 /**
  * This class represents a REST controller to manage courses.
@@ -26,7 +27,7 @@ public class CourseController {
     }
 
     @GetMapping("/courses")
-    public ResponseEntity<Object> getCourses(
+    public ResponseEntity<CustomResponse> getCourses(
             @RequestParam(required = false) Integer id,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Integer departmentId,
@@ -45,26 +46,26 @@ public class CourseController {
     }
 
     @GetMapping("/courses/{course_id}")
-    public ResponseEntity<Object> getCourseById(@PathVariable Integer course_id) {
+    public ResponseEntity<CustomResponse> getCourseById(@PathVariable Integer course_id) {
         return courseService.getCourseById(course_id);
     }
 
     @PostMapping("/courses")
-    public ResponseEntity<Object> createCourse(@RequestBody CourseRequest courseRequest) {
+    public ResponseEntity<CustomResponse> createCourse(@RequestBody CourseRequest courseRequest) {
         Course course = courseRequest.course();
         Department department = courseRequest.department();
         return courseService.createCourse(course.getName(), department);
     }
 
     @PutMapping("/courses")
-    public ResponseEntity<Object> editCourse(@RequestBody CourseRequest courseRequest) {
+    public ResponseEntity<CustomResponse> editCourse(@RequestBody CourseRequest courseRequest) {
         Course course = courseRequest.course();
         Department department = courseRequest.department();
         return courseService.editCourse(course.getId(), course.getName(), department);
     }
 
     @DeleteMapping("/courses")
-    public ResponseEntity<Object> deleteCourse(@RequestBody Course course) {
+    public ResponseEntity<CustomResponse> deleteCourse(@RequestBody Course course) {
         return courseService.deleteCourse(course.getId());
     }
 }

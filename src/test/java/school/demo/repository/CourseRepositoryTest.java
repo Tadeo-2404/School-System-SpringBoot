@@ -1,71 +1,125 @@
 package school.demo.repository;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import school.demo.model.Course;
 import school.demo.model.Department;
+import school.demo.utils.TestConstants;
+import school.demo.utils.TestMessageConstants;
+
 import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class CourseRepositoryTest {
-    @Autowired
-    private CourseRepository courseRepository;
-    @Autowired
-    private DepartmentRepository departmentRepository;
-
+    private final CourseRepository courseRepository;
+    private final DepartmentRepository departmentRepository;
     private Course course;
-    private Course courseSecond;
     private Department department;
+
+    @Autowired
+    public CourseRepositoryTest(CourseRepository courseRepository, DepartmentRepository departmentRepository) {
+        this.courseRepository = courseRepository;
+        this.departmentRepository = departmentRepository;
+    }
 
     @BeforeEach
     public void setup() {
-        this.department = new Department("Department");
+        this.department = new Department(TestConstants.DEPARTMENT_NAME);
         this.departmentRepository.save(department);
-        this.course = new Course("Course", department);
-        this.courseSecond = new Course("CourseSecond", department);
+        this.course = new Course(TestConstants.COURSE_NAME, department);
         this.courseRepository.save(course);
-        this.courseRepository.save(courseSecond);
     }
 
     @Test
-    public void findByNameFoundTest() {
-        Optional<Course> courseTest = courseRepository.findByName("Course");
-        Assertions.assertTrue(courseTest.isPresent(), "Course is not present");
-        Assertions.assertEquals("Course", courseTest.get().getName(), "Names do not match");
+    @Tag("Course_findByName")
+    @Tag("Course_exist")
+    @Tag("Exist")
+    public void findByName_ShouldReturnCorrectEntity_WhenNameExist() {
+        //Given
+        String givenName = TestConstants.COURSE_NAME;
+
+        //Then
+        Optional<Course> courseTest = courseRepository.findByName(givenName);
+
+        //When
+        Assertions.assertTrue(courseTest.isPresent(), TestMessageConstants.COURSE_NOT_PRESENT_MESSAGE);
+        Assertions.assertEquals(givenName, courseTest.get().getName(), TestMessageConstants.COURSE_NAME_NOT_MATCH_MESSAGE);
     }
 
     @Test
-    public void findByNameNotFoundTest() {
-        Optional<Course> courseTest = courseRepository.findByName("CourseNotFound");
-        Assertions.assertTrue(courseTest.isEmpty(), "Course is present");
+    @Tag("Course_findByName")
+    @Tag("Course_not_exist")
+    @Tag("Not_Exist")
+    public void findByName_ShouldReturnEmptyEntity_WhenNameNotExist() {
+        //Given
+        String givenName = TestConstants.COURSE_NAME_NOT_EXIST;
+
+        //When
+        Optional<Course> courseTest = courseRepository.findByName(givenName);
+
+        //Then
+        Assertions.assertTrue(courseTest.isEmpty(), TestMessageConstants.COURSE_NOT_PRESENT_MESSAGE);
     }
 
     @Test
-    public void findByDepartmentIdFoundTest() {
-        List<Course> list = courseRepository.findByDepartmentId(department.getId());
-        Assertions.assertEquals(2, list.size(), "List size does not match");
-        Assertions.assertEquals("Course", list.get(0).getName(), "Registry name does not match");
+    @Tag("Course_findByName")
+    @Tag("Course_null")
+    @Tag("Null")
+    public void findByName_ShouldReturnEmptyEntity_WhenNameIsNull() {
+        //Given
+        String givenName = TestConstants.NULL_STRING_VALUE;
+
+        //When
+        Optional<Course> courseTest = courseRepository.findByName(givenName);
+
+        //Then
+        Assertions.assertTrue(courseTest.isEmpty(), TestMessageConstants.COURSE_NOT_PRESENT_MESSAGE);
     }
 
     @Test
-    public void findByDepartmentIdNotFoundTest() {
-        List<Course> list = courseRepository.findByDepartmentId(2);
-        Assertions.assertTrue(list.isEmpty(), "List size does not match");
+    @Tag("Course_findByDepartmentId")
+    @Tag("Course_exist")
+    @Tag("Exist")
+    public void findByDepartmentId_ShouldReturnList_WhenDepartmentIdExist() {
+        //Given
+        Integer givenDepartmentId = this.department.getId();
+
+        //When
+        List<Course> list = courseRepository.findByDepartmentId(givenDepartmentId);
+
+        //Then
+        Assertions.assertNotNull(list, TestMessageConstants.EMPTY_LIST_MESSAGE);
+        Assertions.assertEquals(TestConstants.COURSE_NAME, list.get(0).getName(), TestMessageConstants.COURSE_NAME_NOT_MATCH_MESSAGE);
     }
 
     @Test
-    public void findByDepartmentNameFoundTest() {
-        List<Course> list = courseRepository.findByDepartmentName(department.getName());
-        Assertions.assertFalse(list.isEmpty(), "List is empty");
-        Assertions.assertEquals("Course", list.get(0).getName(), "Registry name does not match");
+    @Tag("Course_findByDepartmentId")
+    @Tag("Course_not_exist")
+    @Tag("Not_Exist")
+    public void findByDepartmentId_ShouldReturnEmptyList_WhenDepartmentIdNotExist() {
+        //Given
+        Integer givenDepartmentId = TestConstants.COURSE_ID_NOT_EXIST;
+
+        //When
+        List<Course> list = courseRepository.findByDepartmentId(givenDepartmentId);
+
+        //Then
+        Assertions.assertTrue(list.isEmpty(), TestMessageConstants.NOT_EMPTY_LIST_MESSAGE);
+    }
+
+    @Test
+    @Tag("Course_findByDepartmentId")
+    @Tag("Course_null")
+    @Tag("Null")
+    public void findByDepartmentId_ShouldReturnNullPointerException_WhenDepartmentIdIsNull() {
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            courseRepository.findByDepartmentId(TestConstants.NULL_INT_VALUE);
+        });
     }
 
     @AfterEach

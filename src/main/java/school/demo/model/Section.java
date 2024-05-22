@@ -45,12 +45,4 @@ public class Section {
         this.course = course;
         this.teacher = teacher;
     }
-
-    @Override
-    public String toString() {
-        return "Section{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
