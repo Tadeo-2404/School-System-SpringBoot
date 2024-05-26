@@ -19,6 +19,7 @@ public class MessageConstants {
 
     public final String DEPARTMENT_CREATED_MESSAGE = "Department created successfully";
     public final String DEPARTMENT_DUPLICATED_NAME_MESSAGE = "Department with name '%s' already exists";
+    public final String DEPARTMENT_NOT_FOUND_NAME_MESSAGE = "Department with name '%s' not found";
     public final String DEPARTMENT_NOT_FOUND_MESSAGE = "Department with ID '%d' not found";
     public final String DEPARTMENT_EDITED_MESSAGE = "Department edited successfully";
     public final String DEPARTMENT_REMOVED_MESSAGE = "Department removed successfully";
