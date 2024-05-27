@@ -2,8 +2,17 @@ package school.demo.utils;
 
 import lombok.experimental.UtilityClass;
 
+import javax.swing.plaf.PanelUI;
+
 @UtilityClass
 public class TestMessageConstants {
+    public final String DATA_ATTRIBUTE_MUST_NOT_BE_EMPTY_MESSAGE = "Data must not be empty";
+    public final String DATA_ATTRIBUTE_MUST_BE_EMPTY_MESSAGE = "Data must be empty";
+    public final String MESSAGE_ATTRIBUTE_NOT_MATCH_MESSAGE = "Message attribute does not match";
+    public final String CODE_STATUS_NOT_MATCH_MESSAGE = "Code status does not match";
+    public final String SAVED_OBJECT_NOT_MATCH = "Saved object does not match";
+    public final String RUNTIME_EXCEPTION_MESSAGE = "Database connection error";
+
     //LIST MESSAGES
     public final String EMPTY_LIST_MESSAGE = "The list is empty";
     public final String NOT_EMPTY_LIST_MESSAGE = "The list is not empty";
@@ -11,6 +20,7 @@ public class TestMessageConstants {
     //DEPARTMENT MESSAGES
     public final String DEPARTMENT_IS_NULL = "Department is null";
     public final String DEPARTMENT_NOT_NULL = "Department is not null";
+    public final String DEPARTMENT_OBJECT_NOT_MATCH_MESSAGE = "Returned department object does not match";
 
     //TEACHER MESSAGES
     public final String TEACHER_PRESENT_MESSAGE = "Teacher is present";

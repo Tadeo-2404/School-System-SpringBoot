@@ -24,7 +24,7 @@ public interface DepartmentService {
      * @return ResponseEntity<CustomResponse> containing the department if found,
      *         or a 404 response if the department does not exist
      */
-    ResponseEntity<CustomResponse> getDepartmentsById(int id);
+    ResponseEntity<CustomResponse> getDepartmentsById(Integer id);
     /**
      * Retrieves departments by name.
      * @param name the name of the department
@@ -44,12 +44,12 @@ public interface DepartmentService {
      * @return ResponseEntity<CustomResponse> containing the updated department if successful,
      *         or a 404 response if the department does not exist
      */
-    ResponseEntity<CustomResponse> editDepartment(int id, String name);
+    ResponseEntity<CustomResponse> editDepartment(Integer id, String name);
     /**
      * Deletes a department by its ID.
      * @param id the unique identifier of the department to delete
      * @return ResponseEntity<CustomResponse> with status 200 if successful,
      *         or a 404 response if the department does not exist
      */
-    ResponseEntity<CustomResponse> deleteDepartment(int id);
+    ResponseEntity<CustomResponse> deleteDepartment(Integer id);
 }

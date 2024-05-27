@@ -38,6 +38,7 @@ public class DepartmentServiceImplementation implements DepartmentService {
                 customResponse.setStatusCode(HttpStatus.OK.value());
                 return new ResponseEntity<>(customResponse, HttpStatus.OK);
             } else {
+                customResponse.setData(null);
                 customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
                 customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
                 return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
@@ -50,9 +51,16 @@ public class DepartmentServiceImplementation implements DepartmentService {
         }
     }
 
-    public ResponseEntity<CustomResponse> getDepartmentsById(int id) {
+    public ResponseEntity<CustomResponse> getDepartmentsById(Integer id) {
         CustomResponse customResponse = new CustomResponse();
         try {
+            if(id == null || id == 0) {
+                customResponse.setMessage(MessageConstants.MISSING_ID_ATTRIBUTE_MESSAGE);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
+            }
+
             Optional<Department> department = departmentRepository.findById(id);
             if (department.isPresent()) {
                 customResponse.setData(department);
@@ -75,6 +83,13 @@ public class DepartmentServiceImplementation implements DepartmentService {
     public ResponseEntity<CustomResponse> getDepartmentsByName(String name) {
         CustomResponse customResponse = new CustomResponse();
         try {
+            if(name == null) {
+                customResponse.setMessage(MessageConstants.MISSING_NAME_MESSAGE);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
+            }
+
             Optional<Department> department = departmentRepository.findByName(name);
             if (department.isPresent()) {
                 customResponse.setData(department);
@@ -82,8 +97,10 @@ public class DepartmentServiceImplementation implements DepartmentService {
                 customResponse.setStatusCode(HttpStatus.OK.value());
                 return new ResponseEntity<>(customResponse, HttpStatus.OK);
             } else {
+                customResponse.setData(null);
                 customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
                 customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+                customResponse.setMessage(String.format(MessageConstants.DEPARTMENT_NOT_FOUND_NAME_MESSAGE, name));
                 return new ResponseEntity<>(customResponse ,HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
@@ -129,12 +146,12 @@ public class DepartmentServiceImplementation implements DepartmentService {
         }
     }
 
-    public ResponseEntity<CustomResponse> editDepartment(int id, String name) {
+    public ResponseEntity<CustomResponse> editDepartment(Integer id, String name) {
         CustomResponse customResponse = new CustomResponse();
         Department departmentToSave = new Department();
 
         try {
-            if(id == 0) {
+            if(id == null || id == 0) {
                 customResponse.setMessage(MessageConstants.MISSING_ID_ATTRIBUTE_MESSAGE);
                 customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
                 customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
@@ -151,9 +168,9 @@ public class DepartmentServiceImplementation implements DepartmentService {
             Optional<Department> existDepartmentName = departmentRepository.findByName(name);
             if(existDepartmentName.isPresent()) {
                 customResponse.setMessage(String.format(MessageConstants.DEPARTMENT_DUPLICATED_NAME_MESSAGE, name));
-                customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
-                customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
-                return new ResponseEntity<>(customResponse, HttpStatus.NOT_FOUND);
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
             boolean existDepartment = departmentRepository.existsById(id);
@@ -180,11 +197,11 @@ public class DepartmentServiceImplementation implements DepartmentService {
         }
     }
 
-    public ResponseEntity<CustomResponse> deleteDepartment(int id) {
+    public ResponseEntity<CustomResponse> deleteDepartment(Integer id) {
         CustomResponse customResponse = new CustomResponse();
 
         try {
-            if(id == 0) {
+            if(id == null || id == 0) {
                 customResponse.setMessage(MessageConstants.MISSING_ID_ATTRIBUTE_MESSAGE);
                 customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
                 customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
