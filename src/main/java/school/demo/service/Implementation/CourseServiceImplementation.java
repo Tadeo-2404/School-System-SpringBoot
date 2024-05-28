@@ -10,6 +10,7 @@ import school.demo.repository.CourseRepository;
 import school.demo.repository.DepartmentRepository;
 import school.demo.service.CourseService;
 import school.demo.utils.CustomResponse;
+import school.demo.utils.IdValidator;
 import school.demo.utils.MessageConstants;
 
 import java.util.HashMap;
@@ -58,10 +59,10 @@ public class CourseServiceImplementation implements CourseService {
         }
     }
 
-    public ResponseEntity<CustomResponse> getCourseById(int id) {
+    public ResponseEntity<CustomResponse> getCourseById(Integer id) {
         CustomResponse customResponse = new CustomResponse();
         try {
-            if(id == 0) {
+            if(!IdValidator.isValidId(id)) {
                 customResponse.setMessage(MessageConstants.MISSING_ID_ATTRIBUTE_MESSAGE);
                 customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
                 customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
