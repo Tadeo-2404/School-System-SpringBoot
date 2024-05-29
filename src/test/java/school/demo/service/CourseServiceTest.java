@@ -1,6 +1,5 @@
 package school.demo.service;
 
-import io.qameta.allure.Step;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,9 +12,9 @@ import org.springframework.http.ResponseEntity;
 import school.demo.model.Course;
 import school.demo.model.Department;
 import school.demo.repository.CourseRepository;
-import school.demo.repository.DepartmentRepository;
 import school.demo.service.Implementation.CourseServiceImplementation;
 import school.demo.utils.CustomResponse;
+import school.demo.utils.MessageConstants;
 import school.demo.utils.TestConstants;
 import school.demo.utils.TestMessageConstants;
 
@@ -157,5 +156,54 @@ public class CourseServiceTest extends BaseServiceTest {
 
         step("Assert that the response status code is 400 bad request");
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode(), TestMessageConstants.CODE_STATUS_NOT_MATCH_MESSAGE);
+    }
+
+    @Test
+    public void getCourseById_ShouldReturn400_WhenIdExceedsIntMaxValue() {
+        Integer invalidId = Integer.MAX_VALUE+1;
+
+        step("Call the getCourseById method from courseServiceImplementation");
+        ResponseEntity<CustomResponse> responseEntity = courseServiceImplementation.getCourseById(invalidId);
+
+        step("Verify that findById method of course repository is never called");
+        verify(courseRepository, never()).findById(anyInt());
+
+        step("Assert that the response status code is 400 bad request");
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode(), TestMessageConstants.CODE_STATUS_NOT_MATCH_MESSAGE);
+    }
+
+    @Test
+    public void getCourseByName_ShouldReturn200_WhenNameExist() {
+        step("Mocking an existing registry with given name");
+        String givenName = course.getName();
+        when(courseRepository.findByName(givenName)).thenReturn(Optional.of(course));
+
+        step("Call the getCourseByName method from courseServiceImplementation");
+        ResponseEntity<CustomResponse> responseEntity = courseServiceImplementation.getCourseByName(givenName);
+
+        step("Verify that findByName method of course repository is called once");
+        verify(courseRepository, times(1)).findByName(givenName);
+
+        step("Assert that the response status code is 200 OK");
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode(), TestMessageConstants.CODE_STATUS_NOT_MATCH_MESSAGE);
+    }
+
+    @Test
+    public void getCourseByName_ShouldReturn404_WhenNameNotExist() {
+        step("Mocking an existing registry with given name");
+        String givenName = TestConstants.COURSE_NAME_NOT_EXIST;
+        when(courseRepository.findByName(givenName)).thenReturn(Optional.empty());
+
+        step("Call the getCourseByName method from courseServiceImplementation");
+        ResponseEntity<CustomResponse> responseEntity = courseServiceImplementation.getCourseByName(givenName);
+
+        step("Verify that findByName method of course repository is called once");
+        verify(courseRepository, times(1)).findByName(givenName);
+
+        step("Assert that the response status code is 404 Not found");
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode(), TestMessageConstants.CODE_STATUS_NOT_MATCH_MESSAGE);
+
+        step("Assert that the message is correct");
+        assertEquals(String.format(MessageConstants.COURSE_NOT_FOUND_NAME_MESSAGE, givenName), responseEntity.getBody().getMessage(), TestMessageConstants.MESSAGE_ATTRIBUTE_NOT_MATCH_MESSAGE);
     }
 }
