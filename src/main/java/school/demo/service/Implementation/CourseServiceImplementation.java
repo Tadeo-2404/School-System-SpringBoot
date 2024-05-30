@@ -93,7 +93,7 @@ public class CourseServiceImplementation implements CourseService {
         CustomResponse customResponse = new CustomResponse();
         try {
             if(name == null) {
-                customResponse.setMessage(MessageConstants.MISSING_ID_ATTRIBUTE_MESSAGE);
+                customResponse.setMessage(MessageConstants.MISSING_NAME_MESSAGE);
                 customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
                 customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
                 return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
@@ -136,6 +136,7 @@ public class CourseServiceImplementation implements CourseService {
                 customResponse.setStatusCode(HttpStatus.OK.value());
                 return new ResponseEntity<>(customResponse, HttpStatus.OK);
             } else {
+                customResponse.setData(null);
                 customResponse.setMessage(MessageConstants.NO_REGISTRIES_MESSAGE);
                 customResponse.setStatusMessage(HttpStatus.NOT_FOUND);
                 customResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
@@ -182,16 +183,6 @@ public class CourseServiceImplementation implements CourseService {
     public ResponseEntity<CustomResponse> createCourse(String name, Department department) {
         CustomResponse customResponse = new CustomResponse();
         try {
-            if(name != null) {
-                Optional<Course> courseExists = courseRepository.findByName(name);
-                if(courseExists.isPresent()) {
-                    customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
-                    customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
-                    customResponse.setMessage(MessageConstants.DUPLICATE_NAME_ATTRIBUTE_MESSAGE);
-                    return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
-                }
-            }
-
             if(department == null) {
                 customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
                 customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
@@ -213,6 +204,14 @@ public class CourseServiceImplementation implements CourseService {
                 return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
+            Optional<Course> courseExists = courseRepository.findByName(name);
+            if(courseExists.isPresent()) {
+                customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
+                customResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                customResponse.setMessage(MessageConstants.DUPLICATE_NAME_ATTRIBUTE_MESSAGE);
+                return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
+            }
+
             Optional<Department> departmentExist = departmentRepository.findById(department.getId());
             if(departmentExist.isEmpty()) {
                 customResponse.setStatusMessage(HttpStatus.BAD_REQUEST);
@@ -221,7 +220,9 @@ public class CourseServiceImplementation implements CourseService {
                 return new ResponseEntity<>(customResponse, HttpStatus.BAD_REQUEST);
             }
 
-            Course course = courseRepository.save(new Course(name, departmentExist.orElse(null)));
+            Course courseToSave = new Course(name, department);
+            Course course = courseRepository.save(courseToSave);
+
             customResponse.setData(course);
             customResponse.setStatusMessage(HttpStatus.CREATED);
             customResponse.setStatusCode(HttpStatus.CREATED.value());

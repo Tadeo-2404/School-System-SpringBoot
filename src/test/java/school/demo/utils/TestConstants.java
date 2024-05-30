@@ -11,8 +11,8 @@ public final class TestConstants {
     public final Integer NULL_INT_VALUE = null;
     public final Integer ZERO_INT_VALUE = 0;
 
-
     //DEPARTMENT CONSTANTS
+    public final int DEPARTMENT_ID = 1;
     public final int DEPARTMENT_ID_NOT_EXIST = 2;
     public final String DEPARTMENT_NAME = "Department Name";
     public final String DEPARTMENT_NAME_NOT_EXIST = "Department Name Not Exist";
