@@ -13,9 +13,7 @@ import school.demo.utils.CustomResponse;
 import school.demo.utils.IdValidator;
 import school.demo.utils.MessageConstants;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
