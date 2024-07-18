@@ -20,12 +20,6 @@ pipeline {
                 bat 'mvn clean package -DskipTests'
             }
         }
-        stage('Run') {
-            steps {
-                // Run the Spring Boot application
-                bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
-            }
-        }
     }
 
     post {
