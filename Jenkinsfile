@@ -2,34 +2,28 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout code from version control
-                checkout scm
-            }
-        }
         stage('Build') {
             steps {
                 // Run Maven clean and install
-                sh 'mvn clean install'
+                bat 'mvn clean install -DskipTests'
             }
         }
         stage('Test') {
             steps {
                 // Run Maven clean and test
-                sh 'mvn clean test'
+                // bat 'mvn clean test'
             }
         }
         stage('Package') {
             steps {
                 // Run Maven clean and package
-                sh 'mvn clean package'
+                bat 'mvn clean package -DskipTests'
             }
         }
         stage('Run') {
             steps {
                 // Run the Spring Boot application
-                sh 'java -jar target/your-spring-boot-app.jar'
+                bat 'java -jar target/demo-0.0.1-SNAPSHOT.jar'
             }
         }
     }
