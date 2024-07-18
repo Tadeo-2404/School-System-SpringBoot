@@ -8,6 +8,7 @@ import javax.swing.plaf.PanelUI;
 public class TestMessageConstants {
     public final String DATA_ATTRIBUTE_MUST_NOT_BE_EMPTY_MESSAGE = "Data must not be empty";
     public final String DATA_ATTRIBUTE_MUST_BE_EMPTY_MESSAGE = "Data must be empty";
+    public final String DATA_ATTRIBUTE_NOT_MATCH_MESSAGE = "Data attribute not match";
     public final String MESSAGE_ATTRIBUTE_NOT_MATCH_MESSAGE = "Message attribute does not match";
     public final String CODE_STATUS_NOT_MATCH_MESSAGE = "Code status does not match";
     public final String SAVED_OBJECT_NOT_MATCH = "Saved object does not match";

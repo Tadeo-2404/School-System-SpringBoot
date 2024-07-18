@@ -20,7 +20,7 @@ public interface CourseService {
      * @param id the ID of the course to retrieve
      * @return ResponseEntity containing 404 if not found or respective data
      */
-    ResponseEntity<CustomResponse> getCourseById(int id);
+    ResponseEntity<CustomResponse> getCourseById(Integer id);
     /**
      * Retrieves a course based on the provided Name.
      * @param name the name of the course to retrieve

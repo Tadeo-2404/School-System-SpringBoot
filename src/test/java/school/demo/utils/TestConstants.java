@@ -9,17 +9,19 @@ public final class TestConstants {
     public final NullValue NULL_VALUE = null;
     public final String NULL_STRING_VALUE = null;
     public final Integer NULL_INT_VALUE = null;
+    public final Integer ZERO_INT_VALUE = 0;
 
     //DEPARTMENT CONSTANTS
+    public final int DEPARTMENT_ID = 1;
     public final int DEPARTMENT_ID_NOT_EXIST = 2;
     public final String DEPARTMENT_NAME = "Department Name";
     public final String DEPARTMENT_NAME_NOT_EXIST = "Department Name Not Exist";
 
     //COURSE CONSTANTS
+    public final int COURSE_ID = 1;
     public final int COURSE_ID_NOT_EXIST = 2;
     public final String COURSE_NAME = "Course Name";
     public final String COURSE_NAME_NOT_EXIST = "Course Name Not Exist";
-
 
     //STUDENT CONSTANTS
     public final String STUDENT_NAME = "Student Name";
