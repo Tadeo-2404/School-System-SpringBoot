@@ -11,7 +11,6 @@ import school.demo.utils.TestConstants;
 
 import java.util.Optional;
 
-@ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class DepartmentRepositoryTest {
     private final DepartmentRepository departmentRepository;
